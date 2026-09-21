@@ -1,5 +1,5 @@
 {
-  "name": "tarang-scaffold",
+  "name": "tarang",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.3.5",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.3.0",
+    "framer-motion": "^13.4.0",
+    "lucide-react": "^1.47.0",
+    "next": "15.5.25",
+    "radix-ui": "^1.6.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "shadcn": "^4.21.0",
+    "tw-animate-css": "^1.4.0",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -19,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "15.5.25",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

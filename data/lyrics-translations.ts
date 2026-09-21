@@ -1,0 +1,76 @@
+import type { LyricLine } from "@/data/lyrics";
+
+/**
+ * Preset Hindi translations for the same handful of flagship tracks that have
+ * synced lyrics. Line times mirror `lyricsBySongId` exactly so translated and
+ * original lines stay aligned. No translation exists for the rest of the
+ * catalog yet — an honest empty state, not a bug.
+ */
+export const lyricsTranslationsBySongId: Record<string, LyricLine[]> = {
+  "album-tarang-t1": [
+    { time: 0, text: "♪ वादन ♪" },
+    { time: 12, text: "हर लहर जो किनारा छोड़ती है" },
+    { time: 18, text: "कुछ पुराना साथ ले जाती है" },
+    { time: 24, text: "तरंग, तरंग, अंधेरे में हिलोरें" },
+    { time: 31, text: "रोशनी ढूंढो, चिंगारी के पीछे चलो" },
+    { time: 40, text: "मैं शांत था, अब मैं ही ज्वार हूँ" },
+    { time: 47, text: "छिपाने को कुछ नहीं बचा" },
+    { time: 55, text: "♪ वादन ♪" },
+    { time: 68, text: "हर लहर जो किनारा छोड़ती है" },
+    { time: 74, text: "कुछ पुराना साथ ले जाती है" },
+    { time: 82, text: "तरंग, तरंग, अंधेरे में हिलोरें" },
+    { time: 90, text: "रोशनी ढूंढो, चिंगारी के पीछे चलो" },
+    { time: 105, text: "पानी की सतह के नीचे" },
+    { time: 112, text: "हर अंत में एक शुरुआत" },
+    { time: 130, text: "♪ वादन ♪" },
+    { time: 160, text: "तरंग, तरंग, अंधेरे में हिलोरें" },
+    { time: 168, text: "रोशनी ढूंढो, चिंगारी के पीछे चलो" },
+    { time: 200, text: "♪ वादन की समाप्ति ♪" },
+  ],
+  "album-golden-hour-t1": [
+    { time: 0, text: "♪ वादन ♪" },
+    { time: 9, text: "छह बजे हैं और आसमान जल रहा है" },
+    { time: 14, text: "और कहीं नहीं जाना मुझे" },
+    { time: 20, text: "तुम ही सोना हो मेरी सुनहरी घड़ी में" },
+    { time: 26, text: "बस यही रोशनी काफी है" },
+    { time: 33, text: "खिड़कियाँ खुली, रेडियो धीमा" },
+    { time: 38, text: "हर मील घर जैसा लगता है" },
+    { time: 45, text: "तुम ही सोना हो मेरी सुनहरी घड़ी में" },
+    { time: 51, text: "इसे कभी जाने नहीं दूँगा" },
+    { time: 65, text: "♪ वादन ♪" },
+    { time: 90, text: "छह बजे हैं और आसमान जल रहा है" },
+    { time: 96, text: "और कहीं नहीं जाना मुझे" },
+    { time: 110, text: "तुम ही सोना हो मेरी सुनहरी घड़ी में" },
+    { time: 130, text: "♪ धीरे-धीरे ख़त्म ♪" },
+  ],
+  "album-analog-hearts-t1": [
+    { time: 0, text: "♪ वादन ♪" },
+    { time: 14, text: "शहर के ऊपर कागज़ी आसमान" },
+    { time: 20, text: "किनारे मोड़ो, नीचे झुक जाने दो" },
+    { time: 27, text: "हम स्थिर थे, हम जवान थे" },
+    { time: 33, text: "हर धड़कन किसी ने गाई" },
+    { time: 45, text: "तुम्हारे ख़त मैंने दराज़ में रखे" },
+    { time: 51, text: "पता नहीं था प्यार किसलिए होता है" },
+    { time: 58, text: "कागज़ी आसमान, इतने धीरे फटते हैं" },
+    { time: 64, text: "कुछ बातें बस जान लेनी होती हैं" },
+    { time: 90, text: "♪ वादन ♪" },
+    { time: 120, text: "हम स्थिर थे, हम जवान थे" },
+    { time: 126, text: "हर धड़कन किसी ने गाई" },
+    { time: 160, text: "♪ वादन की समाप्ति ♪" },
+  ],
+  "album-slow-burn-t1": [
+    { time: 0, text: "♪ वादन ♪" },
+    { time: 16, text: "धीमी आग, जल्दी मत करो" },
+    { time: 23, text: "इसे ऊँचा चढ़ने दो, हमें ऊपर ले चलो" },
+    { time: 30, text: "धीमी आग, अभी कोई जल्दी नहीं" },
+    { time: 37, text: "हमारे पास वक़्त है समझने का" },
+    { time: 55, text: "मोमबत्ती नीचे पर मोम अब भी सुनहरा" },
+    { time: 61, text: "कुछ चीज़ें धीरे खुलने पर बेहतर लगती हैं" },
+    { time: 75, text: "धीमी आग, जल्दी मत करो" },
+    { time: 82, text: "इसे ऊँचा चढ़ने दो, हमें ऊपर ले चलो" },
+    { time: 110, text: "♪ वादन ♪" },
+    { time: 150, text: "धीमी आग, अभी कोई जल्दी नहीं" },
+    { time: 157, text: "हमारे पास वक़्त है समझने का" },
+    { time: 190, text: "♪ धीरे-धीरे ख़त्म ♪" },
+  ],
+};
