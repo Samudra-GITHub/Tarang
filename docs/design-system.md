@@ -22,7 +22,9 @@ Seven components, each a fixed size/weight/tag pairing: `Display` (h1, hero), `H
 
 ## 3. Components (`components/ui/*.tsx`)
 
-One primitive per concern — Button (5 variants × 6 sizes, icon slots, loading state, `asChild`), Card (tilt+hover wrapper + Artwork/Body/Title/Subtitle slots), Chip, Switch, Slider, Dialog/Sheet/BottomSheet/Drawer (Radix, shared CSS animate-in/out), DropdownMenu/ContextMenu/Popover/Tooltip, Toast (queued, `aria-live`), the full Input family (Input/SearchInput/PasswordInput/OTPInput/TextArea), Icon (the one Lucide wrapper — stroke width and size/tone tokens fixed), Spinner/LinearProgress/CircularProgress (no shimmer, by design).
+One primitive per concern — Button (5 variants × 6 sizes, icon slots, loading state, `asChild`), Card (tilt+hover wrapper + Artwork/Body/Title/Subtitle slots), Chip, Switch, Slider, Dialog/Sheet/BottomSheet (Radix, shared CSS animate-in/out), DropdownMenu/Tooltip, Toast (queued, `aria-live`), the full Input family (Input/SearchInput/PasswordInput/OTPInput/TextArea), Icon (the one Lucide wrapper — stroke width and size/tone tokens fixed), Spinner/LinearProgress/CircularProgress (no shimmer, by design).
+
+**v3.0.0 cleanup**: `context-menu.tsx`, `drawer.tsx`, `popover.tsx`, and `scroll-area.tsx` were removed — confirmed zero importers anywhere in the app (Tarang uses `DropdownMenu` and `Sheet`/`BottomSheet` for every menu/drawer surface that exists; these four were unused shadcn/ui scaffolding left over from an earlier phase).
 
 Live examples: [`/design-system`](../app/design-system/page.tsx) (developer-only, not linked from navigation).
 

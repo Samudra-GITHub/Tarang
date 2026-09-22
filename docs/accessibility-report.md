@@ -26,7 +26,7 @@ Already sound going in: `AppShell` has the only `<main>` (via `ScrollContainer`)
 
 ## Focus system
 
-Unified into one import: `lib/a11y.ts`'s `FOCUS_RING`. Before this sprint, focus rings were inconsistent — `card.tsx` used an `outline`-based ring while everything else used `ring-2`/`ring-ring/50`; `checkbox.tsx`/`tabs.tsx`/`scroll-area.tsx` used a 3px ring; `slider.tsx` used a 4px ring. All now import the same constant. Verified live: Tab-ing through Home shows a consistent teal ring on nav links, mood cards, and buttons alike.
+Unified into one import: `lib/a11y.ts`'s `FOCUS_RING`. Before this sprint, focus rings were inconsistent — `card.tsx` used an `outline`-based ring while everything else used `ring-2`/`ring-ring/50`; `checkbox.tsx`/`tabs.tsx` used a 3px ring; `slider.tsx` used a 4px ring. All now import the same constant. Verified live: Tab-ing through Home shows a consistent teal ring on nav links, mood cards, and buttons alike. (`scroll-area.tsx` and `context-menu.tsx` also received this fix at the time, but were later found to be unused dead code and removed in the v3.0.0 QA pass — see `docs/migration-status.md`.)
 
 ## Contrast audit
 

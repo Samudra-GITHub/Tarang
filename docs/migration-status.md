@@ -17,7 +17,12 @@ Page/Section/Grid/HorizontalRail/StickyHeader/SafeArea/ScrollContainer, every sc
 ## Phase 5 — Motion System: Done
 `lib/motion.ts` + `lib/motion-variants.ts`, one reduced-motion hook, page transitions, rail stagger, player/queue/overlay motion. Locked.
 
-## Phase 6–10 (R3.0) — this sprint
+## v3.0.0 Final QA — this sprint
+- **Dead code deleted**: `components/ui/context-menu.tsx`, `components/ui/drawer.tsx`, `components/ui/popover.tsx`, `components/ui/scroll-area.tsx` — confirmed zero importers repo-wide (grepped for every import path and bare identifier before deleting), rebuilt clean after removal. These were unused shadcn/ui scaffolding; the app uses `DropdownMenu` and `Sheet`/`BottomSheet` for every real menu/drawer surface.
+- **Zero TODO/FIXME/XXX comments** found anywhere in the source tree — confirmed by repo-wide grep, nothing to remove.
+- Full production-build QA pass (build/tsc/lint, live playback/queue/search/library/downloads functional testing, 6-breakpoint responsive audit, a real Lighthouse run) — see `docs/v3-release-report.md`.
+
+## Phase 6–10 (R3.0) — previous sprint
 
 ### Fully done
 - Shared focus-visible system (`lib/a11y.ts`), applied to every outlier component.
