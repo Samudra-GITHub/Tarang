@@ -92,6 +92,13 @@ function startPolling() {
   }, POLL_INTERVAL_MS);
 }
 
+/** Stops the currentTime poll while nothing is playing — no point ticking every 500ms while paused/idle. */
+function stopPolling() {
+  if (!pollHandle) return;
+  clearInterval(pollHandle);
+  pollHandle = null;
+}
+
 function ensurePlayer(): Promise<YTPlayerLike> {
   if (playerReadyPromise) return playerReadyPromise;
 
@@ -105,17 +112,19 @@ function ensurePlayer(): Promise<YTPlayerLike> {
           playerVars: { controls: 0, disablekb: 1, playsinline: 1, modestbranding: 1 },
           events: {
             onReady: () => {
-              startPolling();
               resolve(player!);
             },
             onStateChange: (event: { data: number }) => {
               const state = YT.PlayerState;
               if (event.data === state.PLAYING) {
+                startPolling();
                 listeners.duration.forEach((cb) => cb(player!.getDuration()));
                 listeners.play.forEach((cb) => cb());
               } else if (event.data === state.PAUSED) {
+                stopPolling();
                 listeners.pause.forEach((cb) => cb());
               } else if (event.data === state.ENDED) {
+                stopPolling();
                 listeners.ended.forEach((cb) => cb());
               }
             },

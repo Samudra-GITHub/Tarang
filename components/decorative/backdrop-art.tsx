@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, type MotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useDominantColor } from "@/hooks/use-dominant-color";
+import { durations, easings } from "@/lib/motion";
 
 /**
  * A full-bleed, blurred album-art backdrop that fades into the page background.
@@ -33,7 +34,7 @@ export function BackdropArt({
       <motion.div
         initial={{ opacity: 0, scale: 1.15 }}
         animate={{ opacity: 1, scale: 1.08 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        transition={{ duration: durations.hero, ease: easings.decelerate }}
         className="absolute inset-0 overflow-hidden"
       >
         <Image src={src} alt="" fill sizes="100vw" className="object-cover blur-3xl" priority />

@@ -13,6 +13,9 @@ import { artists } from "@/data/artists";
 import { PlaylistFolders } from "./playlist-folders";
 import { LibrarySongsPanel } from "./library-songs-panel";
 import { RecentlyAddedTimeline } from "./recently-added-timeline";
+import { Page, PageContainer, PageHeader } from "@/components/layout/page";
+import { Grid } from "@/components/layout/grid";
+import { StickyHeader } from "@/components/layout/sticky-header";
 
 export function LibraryView() {
   const savedAlbumIds = useLibraryStore((state) => state.savedAlbumIds);
@@ -23,20 +26,23 @@ export function LibraryView() {
   const followedArtists = artists.filter((artist) => followedArtistIds.includes(artist.id));
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-6 md:px-6">
-      <h1 className="font-heading text-2xl font-semibold tracking-tight">Your Library</h1>
+    <PageContainer>
+      <Page spacing="md">
+      <PageHeader title="Your Library" />
 
       <Tabs defaultValue="playlists">
-        <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <TabsList>
-            <TabsTrigger value="playlists">Playlists</TabsTrigger>
-            <TabsTrigger value="songs">Songs</TabsTrigger>
-            <TabsTrigger value="albums">Albums</TabsTrigger>
-            <TabsTrigger value="artists">Artists</TabsTrigger>
-            <TabsTrigger value="pinned">Pinned</TabsTrigger>
-            <TabsTrigger value="recent">Recent</TabsTrigger>
-          </TabsList>
-        </div>
+        <StickyHeader className="-mx-4 px-4 md:-mx-6 md:px-6">
+          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <TabsList>
+              <TabsTrigger value="playlists">Playlists</TabsTrigger>
+              <TabsTrigger value="songs">Songs</TabsTrigger>
+              <TabsTrigger value="albums">Albums</TabsTrigger>
+              <TabsTrigger value="artists">Artists</TabsTrigger>
+              <TabsTrigger value="pinned">Pinned</TabsTrigger>
+              <TabsTrigger value="recent">Recent</TabsTrigger>
+            </TabsList>
+          </div>
+        </StickyHeader>
 
         <TabsContent value="playlists" className="pt-4">
           <PlaylistFolders />
@@ -55,11 +61,11 @@ export function LibraryView() {
               action={{ label: "Find albums", href: "/search" }}
             />
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <Grid preset="cards">
               {savedAlbums.map((album) => (
                 <AlbumCard key={album.id} album={album} />
               ))}
-            </div>
+            </Grid>
           )}
         </TabsContent>
 
@@ -88,11 +94,11 @@ export function LibraryView() {
               description="Pin albums, artists, playlists, or songs to keep them one tap away."
             />
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <Grid preset="cards">
               {pins.map((pin) => (
                 <PinnedItemCard key={`${pin.kind}-${pin.id}`} pin={pin} />
               ))}
-            </div>
+            </Grid>
           )}
         </TabsContent>
 
@@ -100,6 +106,7 @@ export function LibraryView() {
           <RecentlyAddedTimeline />
         </TabsContent>
       </Tabs>
-    </div>
+      </Page>
+    </PageContainer>
   );
 }

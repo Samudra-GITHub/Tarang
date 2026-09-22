@@ -4,19 +4,24 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search as SearchIcon, TimerOff, TriangleAlert, WifiOff } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchInput } from "@/components/ui/search-input";
 import { AlbumCard } from "@/components/cards/album-card";
 import { PlaylistCard } from "@/components/cards/playlist-card";
 import { ArtistCard } from "@/components/cards/artist-card";
 import { GenreCard } from "@/components/cards/genre-card";
 import { TrackList } from "@/components/tracks/track-list";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { genres } from "@/data/genres";
 import { searchByGenre } from "@/lib/search";
 import { useYoutubeSearch } from "@/features/youtube/use-youtube-search";
 import { youtubeResultToSong } from "@/features/youtube/to-song";
 import type { YoutubeSearchErrorKind } from "@/features/youtube/invidious-client";
+import { Page, PageContainer } from "@/components/layout/page";
+import { Section, SectionTitle } from "@/components/layout/section";
+import { Grid } from "@/components/layout/grid";
+import { HorizontalRail } from "@/components/layout/horizontal-rail";
+import { StickyHeader } from "@/components/layout/sticky-header";
 
 const ERROR_COPY: Record<
   YoutubeSearchErrorKind,
@@ -59,124 +64,120 @@ export function SearchView() {
     genreResults.artists.length === 0;
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-6 md:px-6">
-      <div className="relative max-w-xl">
-        <SearchIcon
-          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden
-        />
-        <Input
-          autoFocus
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search for any song…"
-          className="h-11 rounded-full bg-surface-2 pl-10"
-        />
-      </div>
+    <PageContainer>
+      <Page spacing="md">
+        <StickyHeader>
+          <SearchInput
+            autoFocus
+            value={query}
+            onChange={setQuery}
+            placeholder="Search for any song…"
+            className="h-11 max-w-xl rounded-full bg-surface-2"
+          />
+        </StickyHeader>
 
-      {!hasQuery && !genreParam && (
-        <div className="flex flex-col gap-3">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Browse Genres</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {genres.map((genre) => (
-              <GenreCard key={genre.id} genre={genre} />
-            ))}
-          </div>
-        </div>
-      )}
+        {!hasQuery && !genreParam && (
+          <Section>
+            <SectionTitle>Browse Genres</SectionTitle>
+            <Grid preset="genres">
+              {genres.map((genre) => (
+                <GenreCard key={genre.id} genre={genre} />
+              ))}
+            </Grid>
+          </Section>
+        )}
 
-      {!hasQuery && genreResults && (
-        <div className="flex flex-col gap-8">
-          <h2 className="font-heading text-xl font-semibold tracking-tight">{genreParam}</h2>
+        {!hasQuery && genreResults && (
+          <Section className="gap-8">
+            <SectionTitle>{genreParam}</SectionTitle>
 
-          {genreIsEmpty ? (
-            <EmptyState
-              icon={SearchIcon}
-              title="No matches"
-              description={`Nothing turned up for "${genreParam}" in the catalog.`}
-            />
-          ) : (
-            <>
-              {genreResults.songs.length > 0 && (
-                <section className="flex flex-col gap-2">
-                  <h3 className="font-heading text-base font-semibold">Songs</h3>
-                  <TrackList songs={genreResults.songs} sourceLabel={genreParam ?? "Genre"} showAlbum />
-                </section>
-              )}
+            {genreIsEmpty ? (
+              <EmptyState
+                icon={SearchIcon}
+                title="No matches"
+                description={`Nothing turned up for "${genreParam}" in the catalog.`}
+              />
+            ) : (
+              <>
+                {genreResults.songs.length > 0 && (
+                  <Section className="gap-2">
+                    <SectionTitle as="h3">Songs</SectionTitle>
+                    <TrackList songs={genreResults.songs} sourceLabel={genreParam ?? "Genre"} showAlbum />
+                  </Section>
+                )}
 
-              {genreResults.artists.length > 0 && (
-                <section className="flex flex-col gap-3">
-                  <h3 className="font-heading text-base font-semibold">Artists</h3>
-                  <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {genreResults.artists.length > 0 && (
+                  <HorizontalRail title="Artists" padded={false} animate={false}>
                     {genreResults.artists.map((artist) => (
                       <ArtistCard key={artist.id} artist={artist} />
                     ))}
-                  </div>
-                </section>
-              )}
+                  </HorizontalRail>
+                )}
 
-              {genreResults.albums.length > 0 && (
-                <section className="flex flex-col gap-3">
-                  <h3 className="font-heading text-base font-semibold">Albums</h3>
-                  <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {genreResults.albums.length > 0 && (
+                  <HorizontalRail title="Albums" padded={false} animate={false}>
                     {genreResults.albums.map((album) => (
                       <AlbumCard key={album.id} album={album} />
                     ))}
-                  </div>
-                </section>
-              )}
+                  </HorizontalRail>
+                )}
 
-              {genreResults.playlists.length > 0 && (
-                <section className="flex flex-col gap-3">
-                  <h3 className="font-heading text-base font-semibold">Playlists</h3>
-                  <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {genreResults.playlists.length > 0 && (
+                  <HorizontalRail title="Playlists" padded={false} animate={false}>
                     {genreResults.playlists.map((playlist) => (
                       <PlaylistCard key={playlist.id} playlist={playlist} />
                     ))}
-                  </div>
-                </section>
-              )}
-            </>
-          )}
-        </div>
-      )}
+                  </HorizontalRail>
+                )}
+              </>
+            )}
+          </Section>
+        )}
 
-      {hasQuery && (
-        <div className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold tracking-tight">
-            Results for &quot;{query}&quot;
-          </h2>
+        {hasQuery && (
+          <Section className="gap-4">
+            <SectionTitle>Results for &quot;{query}&quot;</SectionTitle>
 
-          {loading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-14 w-full rounded-md" />
-              ))}
-            </div>
-          )}
+            {loading && (
+              <div role="status" aria-live="polite" className="flex items-center justify-center py-12">
+                <Spinner className="size-6" />
+                <span className="sr-only">Searching for &quot;{query}&quot;…</span>
+              </div>
+            )}
 
-          {!loading && errorKind && (
-            <EmptyState
-              icon={ERROR_COPY[errorKind].icon}
-              title={ERROR_COPY[errorKind].title}
-              description={ERROR_COPY[errorKind].description}
-              action={{ label: "Retry", onClick: retry }}
-            />
-          )}
+            {!loading && (
+              <p role="status" aria-live="polite" className="sr-only">
+                {errorKind
+                  ? ERROR_COPY[errorKind].title
+                  : youtubeSongs.length === 0
+                    ? `No results for "${query}"`
+                    : `${youtubeSongs.length} results for "${query}"`}
+              </p>
+            )}
 
-          {!loading && !errorKind && youtubeSongs.length === 0 && (
-            <EmptyState
-              icon={SearchIcon}
-              title="No matches"
-              description={`Nothing turned up for "${query}".`}
-            />
-          )}
+            {!loading && errorKind && (
+              <EmptyState
+                icon={ERROR_COPY[errorKind].icon}
+                title={ERROR_COPY[errorKind].title}
+                description={ERROR_COPY[errorKind].description}
+                action={{ label: "Retry", onClick: retry }}
+              />
+            )}
 
-          {!loading && !errorKind && youtubeSongs.length > 0 && (
-            <TrackList songs={youtubeSongs} sourceLabel={`Search: ${query}`} />
-          )}
-        </div>
-      )}
-    </div>
+            {!loading && !errorKind && youtubeSongs.length === 0 && (
+              <EmptyState
+                icon={SearchIcon}
+                title="No matches"
+                description={`Nothing turned up for "${query}".`}
+              />
+            )}
+
+            {!loading && !errorKind && youtubeSongs.length > 0 && (
+              <TrackList songs={youtubeSongs} sourceLabel={`Search: ${query}`} />
+            )}
+          </Section>
+        )}
+      </Page>
+    </PageContainer>
   );
 }

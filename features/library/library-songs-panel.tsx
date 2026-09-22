@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { Heart, Music2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { TrackList } from "@/components/tracks/track-list";
 import { EmptyState } from "@/components/ui/empty-state";
+import { FilterChip, TagChip } from "@/components/ui/chip";
+import { Caption } from "@/components/ui/typography";
 import { useLibraryStore } from "@/lib/store/library-store";
 import { useDownloadsStore } from "@/lib/store/downloads-store";
 import { useHistoryStore } from "@/lib/store/history-store";
@@ -144,45 +145,47 @@ export function LibrarySongsPanel() {
           onToggle={(v) => toggleSetValue(years, Number(v), setYears)}
         />
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs font-medium text-muted-foreground">Duration</span>
+          <Caption className="mr-1">Duration</Caption>
           {(["all", "short", "medium", "long"] as DurationBucket[]).map((bucket) => (
-            <button
+            <FilterChip
               key={bucket}
-              type="button"
+              selected={duration === bucket}
               onClick={() => setDuration(bucket)}
-              className={cn(
-                "rounded-full px-2.5 py-1 text-xs",
-                duration === bucket
-                  ? "bg-surface-2 text-foreground"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
+              className="h-7 px-2.5 text-xs"
             >
               {bucket === "all" ? "Any" : bucket === "short" ? "Under 3 min" : bucket === "medium" ? "3–5 min" : "Over 5 min"}
-            </button>
+            </FilterChip>
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs font-medium text-muted-foreground">More</span>
-          <ToggleChip label="Downloaded" active={downloadedOnly} onClick={() => setDownloadedOnly((v) => !v)} />
-          <ToggleChip label="Liked" active={likedOnly} onClick={() => setLikedOnly((v) => !v)} />
-          <ToggleChip label="Recently Added" active={recentlyAdded} onClick={() => setRecentlyAdded((v) => !v)} />
-          <ToggleChip label="Most Played" active={mostPlayed} onClick={() => setMostPlayed((v) => !v)} />
+          <Caption className="mr-1">More</Caption>
+          <FilterChip selected={downloadedOnly} onClick={() => setDownloadedOnly((v) => !v)} className="h-7 px-2.5 text-xs">
+            Downloaded
+          </FilterChip>
+          <FilterChip selected={likedOnly} onClick={() => setLikedOnly((v) => !v)} className="h-7 px-2.5 text-xs">
+            Liked
+          </FilterChip>
+          <FilterChip selected={recentlyAdded} onClick={() => setRecentlyAdded((v) => !v)} className="h-7 px-2.5 text-xs">
+            Recently Added
+          </FilterChip>
+          <FilterChip selected={mostPlayed} onClick={() => setMostPlayed((v) => !v)} className="h-7 px-2.5 text-xs">
+            Most Played
+          </FilterChip>
         </div>
       </div>
 
       {activeChips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-          <span className="text-xs text-muted-foreground">Active filters:</span>
+          <Caption>Active filters:</Caption>
           {activeChips.map((chip) => (
-            <button
+            <TagChip
               key={chip.key}
-              type="button"
-              onClick={chip.onRemove}
-              className="flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/25"
+              onRemove={chip.onRemove}
+              removeLabel={`Remove ${chip.label} filter`}
+              className="h-7 bg-primary/15 px-2.5 text-xs text-primary hover:bg-primary/25"
             >
               {chip.label}
-              <span aria-hidden>×</span>
-            </button>
+            </TagChip>
           ))}
         </div>
       )}
@@ -210,26 +213,17 @@ function FilterGroup({
   if (options.length === 0) return null;
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="mr-1 text-xs font-medium text-muted-foreground">{label}</span>
+      <Caption className="mr-1">{label}</Caption>
       {options.map((option) => (
-        <ToggleChip key={option} label={option} active={active.has(option)} onClick={() => onToggle(option)} />
+        <FilterChip
+          key={option}
+          selected={active.has(option)}
+          onClick={() => onToggle(option)}
+          className="h-7 px-2.5 text-xs"
+        >
+          {option}
+        </FilterChip>
       ))}
     </div>
-  );
-}
-
-function ToggleChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "rounded-full px-2.5 py-1 text-xs transition-colors",
-        active ? "bg-primary text-primary-foreground" : "bg-surface-2 text-muted-foreground hover:text-foreground",
-      )}
-    >
-      {label}
-    </button>
   );
 }

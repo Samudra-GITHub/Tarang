@@ -3,6 +3,7 @@ import { Inter, Inter_Tight, IBM_Plex_Mono, Yatra_One } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/layout/app-shell";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { THEME_COLORS } from "@/lib/theme-colors";
 import "./globals.css";
 
 const inter = Inter({
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#090909",
+  themeColor: THEME_COLORS.background,
   colorScheme: "dark",
 };
 

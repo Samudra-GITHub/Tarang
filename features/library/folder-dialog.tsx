@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FOLDER_COLORS, useFoldersStore, type PlaylistFolder } from "@/lib/store/folders-store";
+import { toast } from "@/lib/store/toast-store";
 
 interface FolderDialogState {
   mode: "create" | "edit";
@@ -44,9 +45,11 @@ export function FolderDialog({
     if (state?.mode === "edit" && state.folder) {
       renameFolder(state.folder.id, name.trim());
       recolorFolder(state.folder.id, color);
+      toast.success("Folder updated", name.trim());
     } else if (state?.mode === "create") {
       const id = createFolder(name.trim(), state.parentId ?? null);
       if (id) recolorFolder(id, color);
+      toast.success("Folder created", name.trim());
     }
     onClose();
   };

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { durations, easings } from "@/lib/motion";
 import {
   ChevronRight,
   Folder as FolderIcon,
@@ -22,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Grid } from "@/components/layout/grid";
 import { DraggablePlaylistCard } from "./draggable-playlist-card";
 
 export function FolderRow({
@@ -76,6 +78,7 @@ export function FolderRow({
         <button
           type="button"
           onClick={() => toggleCollapsed(folder.id)}
+          aria-expanded={!folder.collapsed}
           className="flex min-w-0 flex-1 items-center gap-2 text-left"
         >
           <ChevronRight
@@ -145,7 +148,7 @@ export function FolderRow({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            transition={{ duration: durations.normal, ease: easings.decelerate }}
             className="overflow-hidden pl-6"
           >
             {isEmpty ? (
@@ -153,11 +156,11 @@ export function FolderRow({
             ) : (
               <div className="flex flex-col gap-3 pt-1 pb-3">
                 {folderPlaylists.length > 0 && (
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                  <Grid preset="genres">
                     {folderPlaylists.map((playlist) => (
                       <DraggablePlaylistCard key={playlist.id} playlist={playlist} />
                     ))}
-                  </div>
+                  </Grid>
                 )}
                 {subfolders.map((sub) => (
                   <FolderRow

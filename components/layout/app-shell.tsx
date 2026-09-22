@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 import { OfflineBanner } from "@/components/layout/offline-banner";
@@ -8,11 +9,19 @@ import { NowPlayingView } from "@/features/player/now-playing-view";
 import { QueueDrawer } from "@/features/player/queue-drawer";
 import { AddToPlaylistDialog } from "@/features/library/add-to-playlist-dialog";
 import { PageTransition } from "@/components/layout/page-transition";
-import { SmartDownloadsSync } from "@/features/downloads/smart-downloads-sync";
-import { CreditsSheet } from "@/features/player/credits-sheet";
 import { YoutubePlayerMount } from "@/features/youtube/youtube-player-mount";
 import { GlobalShortcuts } from "@/components/layout/global-shortcuts";
 import { SongPopupDialog } from "@/features/home/song-popup-dialog";
+import { ToastViewport } from "@/components/ui/toast";
+import { ScrollContainer } from "@/components/layout/scroll-container";
+import { LiveRegion } from "@/components/layout/live-region";
+
+const SmartDownloadsSync = dynamic(() =>
+  import("@/features/downloads/smart-downloads-sync").then((m) => m.SmartDownloadsSync),
+);
+const CreditsSheet = dynamic(() =>
+  import("@/features/player/credits-sheet").then((m) => m.CreditsSheet),
+);
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -22,9 +31,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <TopNav />
           <OfflineBanner />
-          <main className="min-h-0 flex-1 overflow-y-auto">
+          <ScrollContainer as="main">
             <PageTransition>{children}</PageTransition>
-          </main>
+          </ScrollContainer>
         </div>
       </div>
       <MiniPlayerFrame />
@@ -37,6 +46,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <YoutubePlayerMount />
       <GlobalShortcuts />
       <SongPopupDialog />
+      <ToastViewport />
+      <LiveRegion />
     </div>
   );
 }

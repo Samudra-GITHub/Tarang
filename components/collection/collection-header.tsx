@@ -14,6 +14,10 @@ import { useLibraryStore } from "@/lib/store/library-store";
 import { useDownloadsStore } from "@/lib/store/downloads-store";
 import { usePinsStore } from "@/lib/store/pins-store";
 import { BackdropArt } from "@/components/decorative/backdrop-art";
+import { Display, Label } from "@/components/ui/typography";
+import { toast } from "@/lib/store/toast-store";
+import { StickyHeader } from "@/components/layout/sticky-header";
+import { durations, easings } from "@/lib/motion";
 
 type CollectionHeaderProps =
   | { kind: "album"; album: Album }
@@ -45,30 +49,26 @@ export function CollectionHeader(props: CollectionHeaderProps) {
     songIds.length > 0 && songIds.every((id) => downloadedSongIds.includes(id));
 
   return (
-    <div className="relative isolate overflow-hidden pb-2">
-      <BackdropArt src={entity.coverUrl} height="h-[320px] md:h-[400px]" />
+    <div className="relative isolate pb-2">
+      <BackdropArt src={entity.coverUrl} height="h-80 md:h-[400px]" />
 
       <div className="relative flex flex-col items-center gap-6 px-4 pt-10 text-center md:flex-row md:items-end md:px-6 md:pt-20 md:text-left">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.94 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="relative size-48 shrink-0 overflow-hidden rounded-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.75)] ring-1 ring-white/10 md:size-56"
+          transition={{ duration: durations.slow, ease: easings.emphasized }}
+          className="relative size-48 shrink-0 overflow-hidden rounded-xl shadow-artwork-md ring-1 ring-white/10 md:size-56"
         >
           <Image src={entity.coverUrl} alt="" fill sizes="224px" className="object-cover" priority />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.15, ease: "easeOut" }}
+          transition={{ duration: durations.slow, delay: 0.15, ease: easings.decelerate }}
           className="flex flex-col gap-2"
         >
-          <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            {isAlbum ? "Album" : "Playlist"}
-          </span>
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-balance md:text-5xl">
-            {entity.title}
-          </h1>
+          <Label>{isAlbum ? "Album" : "Playlist"}</Label>
+          <Display>{entity.title}</Display>
           {isAlbum ? (
             <Link
               href={`/artist/${props.album.artistId}`}
@@ -84,58 +84,68 @@ export function CollectionHeader(props: CollectionHeaderProps) {
             {formatTotalDuration(totalDuration)}
             {isAlbum ? ` · ${props.album.year}` : ""}
           </p>
-          <div className="mt-2 flex items-center justify-center gap-3 md:justify-start">
-            <Button
-              size="icon"
-              className="size-12 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90"
-              onClick={() => playQueue(songs, 0, entity.title)}
-              aria-label={`Play ${entity.title}`}
-              disabled={songs.length === 0}
-            >
-              <Play className="size-5 fill-current" aria-hidden />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-muted-foreground hover:text-foreground"
-              onClick={() =>
-                isAlbum ? toggleSavedAlbum(entity.id) : toggleSavedPlaylist(entity.id)
-              }
-              aria-label={isSaved ? "Remove from Your Library" : "Save to Your Library"}
-              aria-pressed={isSaved}
-            >
-              <Heart
-                className={cn("size-5", isSaved && "fill-current text-accent-secondary")}
-                aria-hidden
-              />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-muted-foreground hover:text-foreground"
-              onClick={() => (isFullyDownloaded ? removeMany(songIds) : downloadMany(songIds))}
-              aria-label={isFullyDownloaded ? "Remove download" : "Download"}
-              aria-pressed={isFullyDownloaded}
-              disabled={songs.length === 0}
-            >
-              <Download
-                className={cn("size-5", isFullyDownloaded && "text-primary")}
-                aria-hidden
-              />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-muted-foreground hover:text-foreground"
-              onClick={() => togglePin(props.kind, entity.id)}
-              aria-label={pinned ? "Unpin" : "Pin to Home & Library"}
-              aria-pressed={pinned}
-            >
-              <Pin className={cn("size-5", pinned && "fill-current text-primary")} aria-hidden />
-            </Button>
-          </div>
         </motion.div>
       </div>
+      <StickyHeader className="flex justify-center md:justify-start">
+        <div className="flex items-center gap-3">
+          <Button
+            size="icon"
+            className="size-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={() => playQueue(songs, 0, entity.title)}
+            aria-label={`Play ${entity.title}`}
+            disabled={songs.length === 0}
+          >
+            <Play className="size-5 fill-current" aria-hidden />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground hover:text-foreground"
+            onClick={() =>
+              isAlbum ? toggleSavedAlbum(entity.id) : toggleSavedPlaylist(entity.id)
+            }
+            aria-label={isSaved ? "Remove from Your Library" : "Save to Your Library"}
+            aria-pressed={isSaved}
+          >
+            <Heart
+              className={cn("size-5", isSaved && "fill-current text-accent-secondary")}
+              aria-hidden
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              if (isFullyDownloaded) {
+                removeMany(songIds);
+                toast.info("Download removed", entity.title);
+              } else {
+                downloadMany(songIds);
+                toast.success("Downloaded", entity.title);
+              }
+            }}
+            aria-label={isFullyDownloaded ? "Remove download" : "Download"}
+            aria-pressed={isFullyDownloaded}
+            disabled={songs.length === 0}
+          >
+            <Download
+              className={cn("size-5", isFullyDownloaded && "text-primary")}
+              aria-hidden
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground hover:text-foreground"
+            onClick={() => togglePin(props.kind, entity.id)}
+            aria-label={pinned ? "Unpin" : "Pin to Home & Library"}
+            aria-pressed={pinned}
+          >
+            <Pin className={cn("size-5", pinned && "fill-current text-primary")} aria-hidden />
+          </Button>
+        </div>
+      </StickyHeader>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { usePlaylistPickerStore } from "@/lib/store/playlist-picker-store";
 import { useUserPlaylistsStore } from "@/lib/store/user-playlists-store";
+import { toast } from "@/lib/store/toast-store";
 
 export function AddToPlaylistDialog() {
   const isOpen = usePlaylistPickerStore((s) => s.isOpen);
@@ -41,6 +42,7 @@ export function AddToPlaylistDialog() {
             if (!newTitle.trim()) return;
             const id = createPlaylist(newTitle.trim());
             if (songId) addSongToPlaylist(id, songId);
+            toast.success("Playlist created", `"${newTitle.trim()}" is ready.`);
             setNewTitle("");
             close();
           }}
@@ -72,11 +74,15 @@ export function AddToPlaylistDialog() {
                   <button
                     key={playlist.id}
                     type="button"
-                    onClick={() =>
-                      included
-                        ? removeSongFromPlaylist(playlist.id, songId)
-                        : addSongToPlaylist(playlist.id, songId)
-                    }
+                    onClick={() => {
+                      if (included) {
+                        removeSongFromPlaylist(playlist.id, songId);
+                        toast.info("Removed from playlist", `Removed from "${playlist.title}".`);
+                      } else {
+                        addSongToPlaylist(playlist.id, songId);
+                        toast.success("Added to playlist", `Added to "${playlist.title}".`);
+                      }
+                    }}
                     className="flex items-center justify-between rounded-md px-2 py-2 text-left text-sm hover:bg-surface-2"
                   >
                     <span className="truncate">{playlist.title}</span>

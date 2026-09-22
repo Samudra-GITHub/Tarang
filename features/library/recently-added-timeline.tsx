@@ -11,6 +11,7 @@ import { playlists } from "@/data/playlists";
 import { songs } from "@/data/songs";
 import { useUserPlaylistsStore } from "@/lib/store/user-playlists-store";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Caption } from "@/components/ui/typography";
 
 type TimelineKind = "song" | "album" | "playlist" | "download";
 
@@ -170,23 +171,21 @@ export function RecentlyAddedTimeline() {
 function KindBadge({ kind }: { kind: TimelineKind }) {
   if (kind === "download") {
     return (
-      <span className="flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted-foreground">
+      <Caption className="flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5">
         <DownloadIcon className="size-3" aria-hidden />
         Downloaded
-      </span>
+      </Caption>
     );
   }
   if (kind === "song") {
     return (
-      <span className="flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted-foreground">
+      <Caption className="flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5">
         <Heart className="size-3" aria-hidden />
         Liked
-      </span>
+      </Caption>
     );
   }
   return (
-    <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted-foreground capitalize">
-      {kind}
-    </span>
+    <Caption className="rounded-full bg-surface-2 px-2 py-0.5 capitalize">{kind}</Caption>
   );
 }

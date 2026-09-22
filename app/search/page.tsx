@@ -1,9 +1,16 @@
 import { Suspense } from "react";
 import { SearchView } from "@/features/search/search-view";
+import { Page, PageContainer } from "@/components/layout/page";
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div className="px-4 py-6 md:px-6" />}>
+    <Suspense
+      fallback={
+        <PageContainer>
+          <Page spacing="md" />
+        </PageContainer>
+      }
+    >
       <SearchView />
     </Suspense>
   );

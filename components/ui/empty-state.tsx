@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { durations, easings } from "@/lib/motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface EmptyStateAction {
   label: string;
@@ -32,7 +34,7 @@ export function EmptyState({
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: durations.slow, ease: easings.decelerate }}
       className={`flex flex-col items-center gap-4 px-4 py-14 text-center ${className ?? ""}`}
     >
       <div className="relative flex size-20 items-center justify-center">

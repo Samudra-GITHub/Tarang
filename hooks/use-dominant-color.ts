@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { THEME_COLORS } from "@/lib/theme-colors";
 
-const FALLBACK = "#141414";
+const FALLBACK = THEME_COLORS.surface;
 
 /** Deterministic fallback so a track always gets a stable, distinct tint. */
 function hashColor(seed: string): string {

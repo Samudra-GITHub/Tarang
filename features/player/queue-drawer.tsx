@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Reorder } from "framer-motion";
+import { AnimatePresence, Reorder } from "framer-motion";
 import { useShallow } from "zustand/react/shallow";
 import { Clock, History, ListMusic, ListPlus, Trash2 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -13,6 +13,9 @@ import { usePlayerUIStore } from "@/lib/store/player-ui-store";
 import { usePlayerStore, selectUpNext, selectHistory } from "@/lib/store/player-store";
 import { useUserPlaylistsStore } from "@/lib/store/user-playlists-store";
 import { QueueRow, ReorderableQueueRow } from "./queue-row";
+import { Label } from "@/components/ui/typography";
+import { ScrollContainer } from "@/components/layout/scroll-container";
+import { announce } from "@/lib/store/announce-store";
 
 export function QueueDrawer() {
   const isOpen = usePlayerUIStore((s) => s.isQueueOpen);
@@ -63,20 +66,18 @@ export function QueueDrawer() {
           )}
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-2 py-3">
+        <ScrollContainer className="px-2 py-3">
           {currentSong && (
             <div className="mb-4">
-              <p className="px-2 pb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <Label as="p" className="px-2 pb-2">
                 Now Playing
-              </p>
+              </Label>
               <QueueRow song={currentSong} />
             </div>
           )}
 
           <div className="mb-1 flex items-center justify-between px-2">
-            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Up Next{shuffle ? " · Shuffled" : ""}
-            </p>
+            <Label as="p">Up Next{shuffle ? " · Shuffled" : ""}</Label>
             {upNext.length > 0 && (
               <div className="flex items-center gap-3">
                 <button
@@ -114,27 +115,32 @@ export function QueueDrawer() {
               onReorder={setUpcomingOrder}
               className="flex flex-col"
             >
-              {upNext.map((song, index) => (
-                <ReorderableQueueRow
-                  key={song.id}
-                  song={song}
-                  onPlay={() => playUpcoming(song.id)}
-                  onRemove={() => removeFromUpcoming(index)}
-                  onMoveUp={() => index > 0 && reorderUpcoming(index, index - 1)}
-                  onMoveDown={() =>
-                    index < upNext.length - 1 && reorderUpcoming(index, index + 1)
-                  }
-                />
-              ))}
+              <AnimatePresence initial={false}>
+                {upNext.map((song, index) => (
+                  <ReorderableQueueRow
+                    key={song.id}
+                    song={song}
+                    onPlay={() => playUpcoming(song.id)}
+                    onRemove={() => {
+                      removeFromUpcoming(index);
+                      announce(`Removed ${song.title} from queue`);
+                    }}
+                    onMoveUp={() => index > 0 && reorderUpcoming(index, index - 1)}
+                    onMoveDown={() =>
+                      index < upNext.length - 1 && reorderUpcoming(index, index + 1)
+                    }
+                  />
+                ))}
+              </AnimatePresence>
             </Reorder.Group>
           )}
 
           {playLater.length > 0 && (
             <div className="mt-5">
-              <p className="mb-1 flex items-center gap-1.5 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <Label as="p" className="mb-1 flex items-center gap-1.5 px-2">
                 <Clock className="size-3.5" aria-hidden />
                 Play Later
-              </p>
+              </Label>
               <Reorder.Group
                 as="ul"
                 axis="y"
@@ -142,17 +148,22 @@ export function QueueDrawer() {
                 onReorder={setPlayLaterOrder}
                 className="flex flex-col"
               >
-                {playLater.map((song, index) => (
-                  <ReorderableQueueRow
-                    key={song.id}
-                    song={song}
-                    onRemove={() => removeFromPlayLater(index)}
-                    onMoveUp={() => index > 0 && reorderPlayLater(index, index - 1)}
-                    onMoveDown={() =>
-                      index < playLater.length - 1 && reorderPlayLater(index, index + 1)
-                    }
-                  />
-                ))}
+                <AnimatePresence initial={false}>
+                  {playLater.map((song, index) => (
+                    <ReorderableQueueRow
+                      key={song.id}
+                      song={song}
+                      onRemove={() => {
+                        removeFromPlayLater(index);
+                        announce(`Removed ${song.title} from queue`);
+                      }}
+                      onMoveUp={() => index > 0 && reorderPlayLater(index, index - 1)}
+                      onMoveDown={() =>
+                        index < playLater.length - 1 && reorderPlayLater(index, index + 1)
+                      }
+                    />
+                  ))}
+                </AnimatePresence>
               </Reorder.Group>
             </div>
           )}
@@ -162,10 +173,12 @@ export function QueueDrawer() {
               <button
                 type="button"
                 onClick={() => setShowHistory((v) => !v)}
-                className="flex w-full items-center gap-1.5 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:text-foreground"
+                className="flex w-full items-center gap-1.5 px-2 hover:text-foreground"
               >
-                <History className="size-3.5" aria-hidden />
-                History ({history.length})
+                <Label as="span" className="flex items-center gap-1.5">
+                  <History className="size-3.5" aria-hidden />
+                  History ({history.length})
+                </Label>
               </button>
               {showHistory && (
                 <div className="mt-1 flex flex-col">
@@ -176,7 +189,7 @@ export function QueueDrawer() {
               )}
             </div>
           )}
-        </div>
+        </ScrollContainer>
       </SheetContent>
 
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>

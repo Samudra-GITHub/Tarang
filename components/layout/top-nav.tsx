@@ -22,7 +22,7 @@ export function TopNav() {
   const signOut = useProfileStore((s) => s.signOut);
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background/80 px-4 backdrop-blur supports-backdrop-filter:bg-background/60 md:px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-4 md:px-6">
       <div className="flex items-center gap-2">
         <div className="hidden items-center gap-1 md:flex">
           <Button

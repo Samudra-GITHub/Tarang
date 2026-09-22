@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import type { Playlist } from "@/types/music";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { getPlaylistSongs } from "@/lib/collections";
-import { PlayButtonOverlay } from "@/components/cards/play-button-overlay";
+import { PlayButton } from "@/components/ui/play-button";
+import { Heading, Body, Label } from "@/components/ui/typography";
+import { durations, easings } from "@/lib/motion";
 
 export function EditorialBento({ playlists }: { playlists: Playlist[] }) {
   const playQueue = usePlayerStore((state) => state.playQueue);
@@ -19,8 +21,8 @@ export function EditorialBento({ playlists }: { playlists: Playlist[] }) {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="group relative col-span-2 row-span-2 overflow-hidden rounded-2xl shadow-lg shadow-black/30 transition-shadow duration-300 hover:shadow-2xl hover:shadow-primary/15"
+        transition={{ duration: durations.slow, ease: easings.decelerate }}
+        className="group relative col-span-2 row-span-2 overflow-hidden rounded-2xl border border-border shadow-lg shadow-black/30 transition-shadow duration-300 hover:shadow-2xl hover:shadow-black/50"
       >
         <Link
           href={`/playlist/${featured.id}`}
@@ -38,16 +40,14 @@ export function EditorialBento({ playlists }: { playlists: Playlist[] }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 pr-16 md:p-6 md:pr-20">
           <div className="min-w-0">
-            <span className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">
-              Featured
-            </span>
-            <h3 className="mt-1 truncate font-heading text-xl font-bold text-white md:text-3xl">
+            <Label className="text-primary tracking-[0.2em]">Featured</Label>
+            <Heading as="span" className="mt-1 block truncate text-white">
               {featured.title}
-            </h3>
-            <p className="mt-0.5 truncate text-sm text-white/70">{featured.description}</p>
+            </Heading>
+            <Body className="mt-0.5 truncate text-white/70">{featured.description}</Body>
           </div>
         </div>
-        <PlayButtonOverlay
+        <PlayButton
           label={`Play ${featured.title}`}
           onPlay={() => playQueue(getPlaylistSongs(featured), 0, featured.title)}
         />
@@ -59,8 +59,8 @@ export function EditorialBento({ playlists }: { playlists: Playlist[] }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.45, delay: 0.07 * (index + 1), ease: "easeOut" }}
-          className="group relative aspect-square overflow-hidden rounded-xl shadow-lg shadow-black/30 transition-shadow duration-300 hover:shadow-2xl hover:shadow-primary/15"
+          transition={{ duration: durations.slow, delay: 0.07 * (index + 1), ease: easings.decelerate }}
+          className="group relative aspect-square overflow-hidden rounded-xl border border-border shadow-lg shadow-black/30 transition-shadow duration-300 hover:shadow-2xl hover:shadow-black/50"
         >
           <Link
             href={`/playlist/${playlist.id}`}
@@ -76,10 +76,10 @@ export function EditorialBento({ playlists }: { playlists: Playlist[] }) {
             />
           </Link>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          <span className="absolute inset-x-0 bottom-0 truncate p-2.5 pr-11 text-sm font-semibold text-white">
+          <Body className="absolute inset-x-0 bottom-0 truncate p-2.5 pr-11 font-semibold text-white">
             {playlist.title}
-          </span>
-          <PlayButtonOverlay
+          </Body>
+          <PlayButton
             label={`Play ${playlist.title}`}
             onPlay={() => playQueue(getPlaylistSongs(playlist), 0, playlist.title)}
           />

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { THEME_COLORS } from "@/lib/theme-colors";
 
 export const dynamic = "force-static";
 
@@ -13,7 +14,7 @@ export function GET() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#090909",
+          background: THEME_COLORS.background,
         }}
       >
         <div
@@ -21,7 +22,7 @@ export function GET() {
             width: s * 0.55,
             height: s * 0.55,
             borderRadius: "50%",
-            border: `${Math.round(s * 0.1)}px solid #2dd4bf`,
+            border: `${Math.round(s * 0.1)}px solid ${THEME_COLORS.primary}`,
           }}
         />
       </div>

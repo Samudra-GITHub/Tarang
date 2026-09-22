@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { WifiOff } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/use-online-status";
+import { durations, easings } from "@/lib/motion";
 
 /** A slim, dismiss-free bar that appears app-wide the moment the browser goes offline. */
 export function OfflineBanner() {
@@ -15,7 +16,7 @@ export function OfflineBanner() {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          transition={{ duration: durations.fast, ease: easings.decelerate }}
           className="overflow-hidden"
         >
           <div

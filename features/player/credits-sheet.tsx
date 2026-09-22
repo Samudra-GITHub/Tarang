@@ -7,6 +7,7 @@ import { useCreditsUIStore } from "@/lib/store/credits-ui-store";
 import { getSongCredits } from "@/lib/credits";
 import { formatDuration } from "@/lib/format-time";
 import { isYoutubeAudioUrl } from "@/features/youtube/youtube-engine";
+import { Label } from "@/components/ui/typography";
 
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
@@ -60,9 +61,9 @@ export function CreditsSheet() {
 
             <div className="flex flex-col gap-6 px-4 pb-6">
               <div>
-                <p className="mb-1 px-0 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                <Label as="p" className="mb-1">
                   Song
-                </p>
+                </Label>
                 <MetaRow
                   label="Album"
                   value={song.albumTitle}
@@ -74,9 +75,9 @@ export function CreditsSheet() {
               </div>
 
               <div>
-                <p className="mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                <Label as="p" className="mb-1">
                   Credits
-                </p>
+                </Label>
                 <MetaRow label="Writers" value={credits.writers.join(", ")} />
                 <MetaRow label="Composer" value={credits.composer} />
                 <MetaRow label="Producer" value={credits.producer} />

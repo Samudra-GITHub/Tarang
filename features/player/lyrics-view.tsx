@@ -8,6 +8,7 @@ import { lyricsTranslationsBySongId } from "@/data/lyrics-translations";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { useDominantColor } from "@/hooks/use-dominant-color";
 import { EmptyState } from "@/components/ui/empty-state";
+import { FilterChip } from "@/components/ui/chip";
 import { LyricShareDialog } from "./lyric-share-dialog";
 import type { Song } from "@/types/music";
 
@@ -70,30 +71,22 @@ export function LyricsView({ song }: { song: Song }) {
 
   const toolbar = (
     <div className="mb-2 flex items-center justify-center gap-2">
-      <button
-        type="button"
+      <FilterChip
+        selected={translateOn}
         onClick={() => setTranslateOn((v) => !v)}
-        aria-pressed={translateOn}
-        className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium",
-          translateOn ? "bg-primary/15 text-primary" : "bg-white/5 text-muted-foreground hover:text-foreground",
-        )}
+        icon={<Languages className="size-3.5" aria-hidden />}
+        className={translateOn ? "h-8 bg-primary/15 text-primary" : "h-8 bg-surface-3"}
       >
-        <Languages className="size-3.5" aria-hidden />
         हिंदी
-      </button>
-      <button
-        type="button"
+      </FilterChip>
+      <FilterChip
+        selected={karaokeOn}
         onClick={() => setKaraokeOn((v) => !v)}
-        aria-pressed={karaokeOn}
-        className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium",
-          karaokeOn ? "bg-primary/15 text-primary" : "bg-white/5 text-muted-foreground hover:text-foreground",
-        )}
+        icon={<Music2 className="size-3.5" aria-hidden />}
+        className={karaokeOn ? "h-8 bg-primary/15 text-primary" : "h-8 bg-surface-3"}
       >
-        <Music2 className="size-3.5" aria-hidden />
         Karaoke
-      </button>
+      </FilterChip>
     </div>
   );
 

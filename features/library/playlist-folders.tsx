@@ -12,6 +12,8 @@ import { FolderDialog } from "./folder-dialog";
 import { FolderRow } from "./folder-row";
 import { DraggablePlaylistCard } from "./draggable-playlist-card";
 import { useAllPlaylists } from "./use-all-playlists";
+import { Label } from "@/components/ui/typography";
+import { Grid } from "@/components/layout/grid";
 
 type DialogState = { mode: "create" | "edit"; parentId?: string | null; folder?: PlaylistFolder } | null;
 
@@ -115,9 +117,9 @@ export function PlaylistFolders() {
         )}
       >
         {folders.length > 0 && (
-          <p className="px-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          <Label as="p" className="px-1">
             All Playlists
-          </p>
+          </Label>
         )}
         {unfiled.length === 0 ? (
           <EmptyState
@@ -126,7 +128,7 @@ export function PlaylistFolders() {
             description="Create a playlist or save one from Home or Search to start organizing."
           />
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <Grid preset="cards">
             {unfiled.map((playlist) => {
               const isOwned = userPlaylists.some((up) => up.id === playlist.id);
               return isOwned ? (
@@ -145,7 +147,7 @@ export function PlaylistFolders() {
                 <DraggablePlaylistCard key={playlist.id} playlist={playlist} />
               );
             })}
-          </div>
+          </Grid>
         )}
       </div>
 

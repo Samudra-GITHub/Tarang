@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SearchX } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchInput } from "@/components/ui/search-input";
+import { FilterChip } from "@/components/ui/chip";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Caption } from "@/components/ui/typography";
 import type { Song } from "@/types/music";
-import { cn } from "@/lib/utils";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { TrackRow } from "./track-row";
 
@@ -89,29 +90,26 @@ export function TrackList({
       {(enableFilter || enableSort) && (
         <div className="flex flex-wrap items-center gap-3">
           {enableFilter && (
-            <Input
+            <SearchInput
               ref={inputRef}
               value={filter}
-              onChange={(event) => setFilter(event.target.value)}
+              onChange={setFilter}
               placeholder="Search — press / to focus"
-              className="h-9 max-w-xs"
+              className="max-w-xs"
             />
           )}
           {enableSort && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span className="mr-1">Sort:</span>
+            <div className="flex items-center gap-1.5">
+              <Caption className="mr-1">Sort:</Caption>
               {(Object.keys(SORT_LABELS) as SortMode[]).map((mode) => (
-                <button
+                <FilterChip
                   key={mode}
-                  type="button"
+                  selected={sortMode === mode}
                   onClick={() => setSortMode(mode)}
-                  className={cn(
-                    "rounded-full px-2.5 py-1",
-                    sortMode === mode ? "bg-surface-2 text-foreground" : "hover:text-foreground",
-                  )}
+                  className="h-7 px-2.5 text-xs"
                 >
                   {SORT_LABELS[mode]}
-                </button>
+                </FilterChip>
               ))}
             </div>
           )}

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Mono } from "@/components/ui/typography";
+import { LinearProgress } from "@/components/ui/progress";
 
 export interface BarListItem {
   key: string;
@@ -19,15 +21,12 @@ export function BarList({ items }: { items: BarListItem[] }) {
             <span className="w-28 shrink-0 truncate text-sm text-foreground sm:w-36">
               {item.label}
             </span>
-            <div className="h-2 flex-1 overflow-hidden rounded-[4px] bg-surface-2">
-              <div
-                className="h-full rounded-r-[4px] bg-primary"
-                style={{ width: `${Math.max(pct, 3)}%` }}
-              />
-            </div>
-            <span className="w-6 shrink-0 text-right font-mono text-xs text-muted-foreground">
-              {item.value}
-            </span>
+            <LinearProgress
+              value={Math.max(pct, 3) / 100}
+              trackClassName="h-2 flex-1"
+              aria-label={item.label}
+            />
+            <Mono className="w-6 shrink-0 text-right">{item.value}</Mono>
           </div>
         );
 

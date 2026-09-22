@@ -12,8 +12,8 @@ export function useTrending(): {
   results: YoutubeSearchResult[];
   loading: boolean;
 } {
-  const [results, setResults] = useState<YoutubeSearchResult[]>(() => getCachedTrending() ?? []);
-  const [loading, setLoading] = useState(results.length === 0);
+  const [results, setResults] = useState<YoutubeSearchResult[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     try {
@@ -29,6 +29,11 @@ export function useTrending(): {
   }, []);
 
   useEffect(() => {
+    const cached = getCachedTrending();
+    if (cached) {
+      setResults(cached);
+      setLoading(false);
+    }
     void refresh();
     const interval = setInterval(refresh, REFRESH_INTERVAL_MS);
     return () => clearInterval(interval);

@@ -35,6 +35,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PlayingIndicator } from "./playing-indicator";
+import { Mono } from "@/components/ui/typography";
+import { toast } from "@/lib/store/toast-store";
 
 export function TrackRow({
   song,
@@ -82,6 +84,8 @@ export function TrackRow({
     <div
       role="button"
       tabIndex={0}
+      aria-label={`${song.title} by ${song.artistName}`}
+      aria-current={isCurrent ? "true" : undefined}
       onClick={handleActivate}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -184,9 +188,7 @@ export function TrackRow({
       </button>
 
       <div className="flex items-center gap-3" onClick={(event) => event.stopPropagation()}>
-        <span className="font-mono text-xs text-muted-foreground">
-          {formatDuration(song.duration)}
-        </span>
+        <Mono>{formatDuration(song.duration)}</Mono>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -219,7 +221,13 @@ export function TrackRow({
               {pinned ? <PinOff className="size-4" aria-hidden /> : <Pin className="size-4" aria-hidden />}
               {pinned ? "Unpin" : "Pin"}
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => toggleDownloaded(song.id)}>
+            <DropdownMenuItem
+              onSelect={() => {
+                toggleDownloaded(song.id);
+                if (downloaded) toast.info("Download removed", song.title);
+                else toast.success("Downloaded", song.title);
+              }}
+            >
               <Download className={cn("size-4", downloaded && "text-primary")} aria-hidden />
               {downloaded ? "Remove Download" : "Download"}
             </DropdownMenuItem>

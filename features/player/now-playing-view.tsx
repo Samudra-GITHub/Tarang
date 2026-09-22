@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import {
   AudioLines,
@@ -29,11 +30,23 @@ import { useDownloadsStore } from "@/lib/store/downloads-store";
 import { usePlayerUIStore } from "@/lib/store/player-ui-store";
 import { useVisualizerStore, VISUALIZER_STYLE_LABELS } from "@/lib/store/visualizer-store";
 import { useCreditsUIStore } from "@/lib/store/credits-ui-store";
+import { announce } from "@/lib/store/announce-store";
 import { isYoutubeAudioUrl } from "@/features/youtube/youtube-engine";
 import { useDominantColor } from "@/hooks/use-dominant-color";
-import { springSnappy } from "@/lib/motion";
-import { LyricsView } from "./lyrics-view";
+import { durations, easings } from "@/lib/motion";
+import { playerExpand } from "@/lib/motion-variants";
+import { useMotionVariant, useReducedMotion } from "@/hooks/use-reduced-motion";
 import { WaveformProgress } from "./waveform-progress";
+import { Label, Mono, Title } from "@/components/ui/typography";
+import { Spinner } from "@/components/ui/spinner";
+
+const LyricsView = dynamic(() => import("./lyrics-view").then((m) => m.LyricsView), {
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <Spinner />
+    </div>
+  ),
+});
 
 export function NowPlayingView() {
   const isOpen = usePlayerUIStore((s) => s.isNowPlayingOpen);
@@ -68,6 +81,9 @@ export function NowPlayingView() {
 
   const [seekPreview, setSeekPreview] = useState<number | null>(null);
   const dragControls = useDragControls();
+  const reducedMotion = useReducedMotion();
+  const sheetVariants = useMotionVariant(playerExpand);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const currentSong = currentIndex >= 0 ? queue[currentIndex] : undefined;
   const backgroundColor = useDominantColor(currentSong?.coverUrl);
@@ -78,6 +94,7 @@ export function NowPlayingView() {
       if (event.key === "Escape") closeNowPlaying();
     };
     window.addEventListener("keydown", onKeyDown);
+    closeButtonRef.current?.focus();
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isOpen, closeNowPlaying]);
 
@@ -94,7 +111,7 @@ export function NowPlayingView() {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          drag="y"
+          drag={reducedMotion ? false : "y"}
           dragListener={false}
           dragControls={dragControls}
           dragConstraints={{ top: 0, bottom: 0 }}
@@ -102,10 +119,13 @@ export function NowPlayingView() {
           onDragEnd={(_, info) => {
             if (info.offset.y > 120 || info.velocity.y > 600) closeNowPlaying();
           }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 24 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
+          variants={sheetVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Now Playing"
           className="fixed inset-0 z-50 flex flex-col overflow-hidden text-foreground"
         >
           <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -115,7 +135,7 @@ export function NowPlayingView() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
+                transition={{ duration: durations.hero, ease: easings.decelerate }}
                 className="absolute inset-0"
               >
                 <Image
@@ -147,6 +167,7 @@ export function NowPlayingView() {
 
           <div className="flex items-center justify-between px-4 pb-4 md:px-6">
             <Button
+              ref={closeButtonRef}
               variant="ghost"
               size="icon"
               className="rounded-full text-foreground hover:bg-white/10"
@@ -156,9 +177,7 @@ export function NowPlayingView() {
               <ChevronDown className="size-5" aria-hidden />
             </Button>
             <div className="text-center">
-              <p className="text-[11px] tracking-wide text-muted-foreground uppercase">
-                Playing from
-              </p>
+              <Label as="p">Playing from</Label>
               <p className="text-sm font-medium">{sourceLabel ?? "Tarang"}</p>
             </div>
             <Button
@@ -179,21 +198,9 @@ export function NowPlayingView() {
               </div>
             ) : (
               <div className="relative mx-auto aspect-square w-full max-w-[min(80vw,380px)]">
-                {isPlaying && (
-                  <div
-                    className="tarang-pulse absolute -inset-[6%] rounded-full blur-2xl"
-                    style={{
-                      background: `radial-gradient(circle, color-mix(in srgb, ${backgroundColor} 75%, transparent) 0%, transparent 72%)`,
-                    }}
-                    aria-hidden
-                  />
-                )}
                 <motion.div
-                  layoutId="player-artwork"
-                  className="absolute inset-0 overflow-hidden rounded-full ring-1 ring-white/10"
-                  style={{
-                    boxShadow: `0 30px 80px -20px rgba(0,0,0,0.8), 0 0 90px -25px color-mix(in srgb, ${backgroundColor} 70%, transparent)`,
-                  }}
+                  layoutId={reducedMotion ? undefined : "player-artwork"}
+                  className="absolute inset-0 overflow-hidden rounded-full ring-1 ring-white/10 shadow-artwork-lg"
                 >
                   <div className={cn("tarang-spin size-full", isPlaying && "is-spinning")}>
                     <Image
@@ -212,9 +219,7 @@ export function NowPlayingView() {
             {!showLyrics && (
               <div className="flex w-full max-w-[min(80vw,380px)] items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-heading text-xl font-bold tracking-tight">
-                    {currentSong.title}
-                  </p>
+                  <Title className="truncate">{currentSong.title}</Title>
                   {isYoutubeAudioUrl(currentSong.audioUrl) ? (
                     <p className="truncate text-sm text-muted-foreground">
                       {currentSong.artistName}
@@ -257,23 +262,20 @@ export function NowPlayingView() {
                   const time = fraction * duration;
                   seekTo(time);
                   setSeekPreview(null);
+                  announce(`Seeked to ${formatDuration(time)}`);
                 }}
               />
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] text-muted-foreground">
-                  {formatDuration(displayedTime)}
-                </span>
+                <Mono>{formatDuration(displayedTime)}</Mono>
                 <button
                   type="button"
                   onClick={cycleVisualizerStyle}
-                  className="rounded-full px-2 py-0.5 font-mono text-[11px] text-muted-foreground hover:text-foreground"
+                  className="rounded-full px-2 py-0.5 hover:text-foreground"
                   aria-label={`Visualizer style: ${VISUALIZER_STYLE_LABELS[visualizerStyle]}. Tap to change.`}
                 >
-                  {VISUALIZER_STYLE_LABELS[visualizerStyle]}
+                  <Mono>{VISUALIZER_STYLE_LABELS[visualizerStyle]}</Mono>
                 </button>
-                <span className="font-mono text-[11px] text-muted-foreground">
-                  {formatDuration(duration)}
-                </span>
+                <Mono>{formatDuration(duration)}</Mono>
               </div>
             </div>
 
@@ -303,7 +305,7 @@ export function NowPlayingView() {
               <Button
                 size="icon"
                 onClick={togglePlay}
-                className="relative size-16 overflow-hidden rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+                className="relative size-16 overflow-hidden rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
                 aria-label={isPlaying ? "Pause" : "Play"}
               >
                 <AnimatePresence mode="wait" initial={false}>
@@ -312,7 +314,7 @@ export function NowPlayingView() {
                     initial={{ scale: 0.4, opacity: 0, rotate: -90 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     exit={{ scale: 0.4, opacity: 0, rotate: 90 }}
-                    transition={springSnappy}
+                    transition={easings.springSnappy}
                     className="absolute inset-0 flex items-center justify-center"
                   >
                     {isPlaying ? (

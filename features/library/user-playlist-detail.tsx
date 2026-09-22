@@ -8,6 +8,7 @@ import { CollectionHeader } from "@/components/collection/collection-header";
 import { TrackList } from "@/components/tracks/track-list";
 import { PlaceholderPage } from "@/components/layout/placeholder-page";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Page, PageContainer } from "@/components/layout/page";
 
 export function UserPlaylistDetail({ id }: { id: string }) {
   const [hydrated, setHydrated] = useState(false);
@@ -30,9 +31,9 @@ export function UserPlaylistDetail({ id }: { id: string }) {
   const songs = getPlaylistSongs(playlist);
 
   return (
-    <div className="flex flex-col gap-8 pb-10">
+    <Page spacing="lg">
       <CollectionHeader kind="playlist" playlist={playlist} />
-      <div className="px-4 md:px-6">
+      <PageContainer>
         {songs.length === 0 ? (
           <EmptyState
             icon={ListMusic}
@@ -46,7 +47,7 @@ export function UserPlaylistDetail({ id }: { id: string }) {
         ) : (
           <TrackList songs={songs} sourceLabel={playlist.title} showAlbum enableFilter enableSort />
         )}
-      </div>
-    </div>
+      </PageContainer>
+    </Page>
   );
 }

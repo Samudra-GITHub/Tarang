@@ -11,6 +11,7 @@ import { usePlayerStore } from "@/lib/store/player-store";
 import { useLibraryStore } from "@/lib/store/library-store";
 import { usePinsStore } from "@/lib/store/pins-store";
 import { usePlaylistPickerStore } from "@/lib/store/playlist-picker-store";
+import { Mono, Title } from "@/components/ui/typography";
 
 /** A quick-look popup for a song card — play, like, pin, or queue without leaving the page. */
 export function SongPopupDialog() {
@@ -29,17 +30,13 @@ export function SongPopupDialog() {
       <DialogContent className="sm:max-w-xs">
         {song && (
           <div className="flex min-w-0 flex-col items-center gap-4 pt-2 text-center">
-            <div className="relative size-40 shrink-0 overflow-hidden rounded-xl shadow-[0_20px_45px_-12px_rgba(0,0,0,0.7)]">
+            <div className="relative size-40 shrink-0 overflow-hidden rounded-xl shadow-artwork-md">
               <Image src={song.coverUrl} alt="" fill sizes="160px" className="object-cover" />
             </div>
             <div className="min-w-0 w-full">
-              <p className="truncate font-heading text-lg font-bold tracking-tight">
-                {song.title}
-              </p>
+              <Title className="truncate">{song.title}</Title>
               <p className="truncate text-sm text-muted-foreground">{song.artistName}</p>
-              <p className="mt-0.5 font-mono text-xs text-muted-foreground">
-                {formatDuration(song.duration)}
-              </p>
+              <Mono className="mt-0.5">{formatDuration(song.duration)}</Mono>
             </div>
 
             <Button

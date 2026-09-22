@@ -2,20 +2,25 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { Bell, Download, LogOut, User, Volume2 } from "lucide-react";
+import { Download, LogOut, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import { VolumeProgress } from "@/components/ui/volume-progress";
+import { FilterChip } from "@/components/ui/chip";
+import { Switch } from "@/components/ui/switch";
+import { Body, Caption } from "@/components/ui/typography";
 import { initialFromName, useProfileStore } from "@/lib/store/profile-store";
 import { useSettingsStore } from "@/lib/store/settings-store";
 import { usePlayerStore } from "@/lib/store/player-store";
+import { toast } from "@/lib/store/toast-store";
 import {
   useVisualizerStore,
   VISUALIZER_STYLE_LABELS,
   type VisualizerStyle,
 } from "@/lib/store/visualizer-store";
+import { Page, PageContainer, PageHeader } from "@/components/layout/page";
+import { Section, SectionTitle, SectionDescription } from "@/components/layout/section";
 
 function SectionCard({
   title,
@@ -27,13 +32,13 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-4 md:p-5">
+    <Section className="gap-4 rounded-lg border border-border bg-surface p-4 md:p-5">
       <div>
-        <h2 className="font-heading text-base font-semibold text-foreground">{title}</h2>
-        {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
+        <SectionTitle>{title}</SectionTitle>
+        {description && <SectionDescription className="mt-0.5">{description}</SectionDescription>}
       </div>
       {children}
-    </section>
+    </Section>
   );
 }
 
@@ -69,8 +74,9 @@ export function SettingsView() {
   const toggleNotifyTrending = useSettingsStore((s) => s.toggleNotifyTrending);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 md:px-6">
-      <h1 className="font-heading text-2xl font-semibold tracking-tight">Settings</h1>
+    <PageContainer maxWidth="2xl">
+      <Page spacing="md">
+      <PageHeader title="Settings" />
 
       <SectionCard title="Profile" description="Saved on this device — Tarang has no backend.">
         <div className="flex items-center gap-4">
@@ -85,6 +91,7 @@ export function SettingsView() {
               event.preventDefault();
               setName(nameDraft);
               setEmail(emailDraft);
+              toast.success("Profile saved");
             }}
           >
             <Input
@@ -113,6 +120,7 @@ export function SettingsView() {
             signOut();
             setNameDraft("Guest Listener");
             setEmailDraft("");
+            toast.info("Signed out");
           }}
         >
           <LogOut className="size-4" aria-hidden />
@@ -122,83 +130,46 @@ export function SettingsView() {
 
       <SectionCard title="Playback">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-sm text-foreground">
-            <Volume2 className="size-4 text-muted-foreground" aria-hidden />
-            Default volume
-          </div>
-          <Slider
-            value={[volume * 100]}
-            max={100}
-            step={1}
-            onValueChange={([value]) => setVolume(value / 100)}
-            className="max-w-xs"
-          />
+          <Body className="font-medium">Default volume</Body>
+          <VolumeProgress volume={volume} onVolumeChange={setVolume} className="max-w-xs" />
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-foreground">Waveform visualizer</p>
+          <Body className="font-medium">Waveform visualizer</Body>
           <div className="flex flex-wrap gap-2">
             {(Object.keys(VISUALIZER_STYLE_LABELS) as VisualizerStyle[]).map((style) => (
-              <button
+              <FilterChip
                 key={style}
-                type="button"
+                selected={visualizerStyle === style}
                 onClick={() => setVisualizerStyle(style)}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                  visualizerStyle === style
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-surface-2 text-muted-foreground hover:text-foreground",
-                )}
               >
                 {VISUALIZER_STYLE_LABELS[style]}
-              </button>
+              </FilterChip>
             ))}
           </div>
         </div>
       </SectionCard>
 
       <SectionCard title="Notifications">
-        <button
-          type="button"
-          onClick={toggleNotifyTrending}
-          aria-pressed={notifyTrending}
-          className={cn(
-            "flex items-center justify-between gap-3 rounded-lg border p-3 text-left transition-colors",
-            notifyTrending
-              ? "border-primary/40 bg-primary/5"
-              : "border-border bg-surface hover:bg-surface-2",
-          )}
-        >
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-surface p-3">
           <div className="flex items-center gap-2">
-            <Bell
-              className={cn("size-4", notifyTrending ? "text-primary" : "text-muted-foreground")}
-              aria-hidden
-            />
             <div>
-              <p className="text-sm font-medium text-foreground">New viral songs</p>
-              <p className="text-xs text-muted-foreground">
-                Let me know when Trending Now shifts.
-              </p>
+              <Body id="notify-trending-label" className="font-medium">
+                New viral songs
+              </Body>
+              <Caption className="block">Let me know when Trending Now shifts.</Caption>
             </div>
           </div>
-          <span
-            className={cn(
-              "flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
-              notifyTrending ? "bg-primary" : "bg-surface-2",
-            )}
-          >
-            <span
-              className={cn(
-                "size-4 rounded-full bg-white transition-transform",
-                notifyTrending ? "translate-x-4" : "translate-x-0",
-              )}
-            />
-          </span>
-        </button>
+          <Switch
+            checked={notifyTrending}
+            onCheckedChange={toggleNotifyTrending}
+            aria-labelledby="notify-trending-label"
+          />
+        </div>
       </SectionCard>
 
       <SectionCard title="Downloads & Storage">
-        <Button asChild variant="secondary" className="w-fit gap-2 rounded-full">
+        <Button asChild variant="secondary" className="w-fit gap-2">
           <Link href="/downloads">
             <Download className="size-4" aria-hidden />
             Manage downloads
@@ -210,6 +181,7 @@ export function SettingsView() {
         <User className="size-3.5" aria-hidden />
         Tarang · तरङ्ग — all preferences are stored on this device only.
       </div>
-    </div>
+      </Page>
+    </PageContainer>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 /** Soft, slow-breathing teal/coral blooms — brand-colored ambient texture, never a rainbow. */
 export function AmbientGlow({ className }: { className?: string }) {

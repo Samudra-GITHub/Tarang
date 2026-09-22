@@ -1,4 +1,3 @@
-import { HorizontalRail } from "./horizontal-rail";
 import { HeroSpotlight, type Spotlight } from "./hero-spotlight";
 import { EditorialBento } from "./editorial-bento";
 import { AlbumCard } from "@/components/cards/album-card";
@@ -7,6 +6,9 @@ import { GenreCard } from "@/components/cards/genre-card";
 import { PinnedSection } from "@/features/pinned/pinned-section";
 import { TrendingRail } from "@/features/home/trending-rail";
 import { MoodCard } from "@/features/moods/mood-card";
+import { Page } from "@/components/layout/page";
+import { Section, SectionTitle } from "@/components/layout/section";
+import { HorizontalRail } from "@/components/layout/horizontal-rail";
 import { albums } from "@/data/albums";
 import { playlists } from "@/data/playlists";
 import { genres } from "@/data/genres";
@@ -34,11 +36,15 @@ function resolveSpotlight(ref: HomeMediaRef | undefined): Spotlight | null {
   return playlist ? { kind: "playlist", item: playlist } : null;
 }
 
+// `continueListening`/`albums`/`playlists` are static module data, so this
+// only ever needs to run once, not on every HomeView render.
+const homeSpotlight = resolveSpotlight(continueListening[0]);
+
 export function HomeView() {
-  const spotlight = resolveSpotlight(continueListening[0]);
+  const spotlight = homeSpotlight;
 
   return (
-    <div className="flex flex-col gap-10 pb-10">
+    <Page spacing="xl">
       {spotlight && <HeroSpotlight spotlight={spotlight} greeting="Good to see you" />}
 
       <PinnedSection />
@@ -69,18 +75,16 @@ export function HomeView() {
         ))}
       </HorizontalRail>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="px-4 font-heading text-lg font-semibold tracking-tight md:px-6">
-          Editorial Picks
-        </h2>
+      <Section>
+        <SectionTitle className="px-4 md:px-6">Editorial Picks</SectionTitle>
         <EditorialBento playlists={playlists} />
-      </section>
+      </Section>
 
       <HorizontalRail title="Genre Collections">
         {genres.map((genre) => (
           <GenreCard key={genre.id} genre={genre} />
         ))}
       </HorizontalRail>
-    </div>
+    </Page>
   );
 }

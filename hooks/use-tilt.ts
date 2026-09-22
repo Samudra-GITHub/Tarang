@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useMotionValue, useSpring, useReducedMotion, type MotionValue } from "framer-motion";
+import { useMotionValue, useSpring, type MotionValue } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface TiltHandlers {
   ref: React.RefObject<HTMLDivElement | null>;

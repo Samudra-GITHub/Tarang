@@ -5,6 +5,8 @@ import { Check, Copy, Download } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import type { Song } from "@/types/music";
+import { toast } from "@/lib/store/toast-store";
+import { THEME_COLORS } from "@/lib/theme-colors";
 
 const CARD_WIDTH = 480;
 const CARD_HEIGHT = 600;
@@ -47,7 +49,7 @@ async function drawCard(
 
   const gradient = ctx.createLinearGradient(0, 0, 0, CARD_HEIGHT);
   gradient.addColorStop(0, dominantColor);
-  gradient.addColorStop(1, "#090909");
+  gradient.addColorStop(1, THEME_COLORS.background);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
 
@@ -68,20 +70,20 @@ async function drawCard(
   if (img) {
     ctx.drawImage(img, artX, artY, artSize, artSize);
   } else {
-    ctx.fillStyle = "#1c1c1c";
+    ctx.fillStyle = THEME_COLORS.surface2;
     ctx.fillRect(artX, artY, artSize, artSize);
   }
   ctx.restore();
 
   ctx.textAlign = "center";
-  ctx.fillStyle = "#f2f2f0";
+  ctx.fillStyle = THEME_COLORS.foreground;
   ctx.font = "600 20px sans-serif";
   ctx.fillText(song.title, CARD_WIDTH / 2, artY + artSize + 36, CARD_WIDTH - 80);
   ctx.fillStyle = "rgba(242,242,240,0.65)";
   ctx.font = "400 14px sans-serif";
   ctx.fillText(song.artistName, CARD_WIDTH / 2, artY + artSize + 58, CARD_WIDTH - 80);
 
-  ctx.fillStyle = "#f2f2f0";
+  ctx.fillStyle = THEME_COLORS.foreground;
   ctx.font = "700 30px sans-serif";
   const lyricLines = wrapText(ctx, `"${lineText}"`, CARD_WIDTH - 96);
   const lineHeight = 40;
@@ -141,9 +143,10 @@ export function LyricShareDialog({
     try {
       await navigator.clipboard.writeText(lineText);
       setCopied(true);
+      toast.success("Copied to clipboard");
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // Clipboard access can be denied by the browser — copy just silently no-ops.
+      toast.error("Couldn't copy", "Clipboard access was blocked by the browser.");
     }
   };
 

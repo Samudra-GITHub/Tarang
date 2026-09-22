@@ -6,6 +6,9 @@ import { ChevronDown, ChevronUp, GripVertical, X } from "lucide-react";
 import type { Song } from "@/types/music";
 import { formatDuration } from "@/lib/format-time";
 import { cn } from "@/lib/utils";
+import { queueSlide } from "@/lib/motion-variants";
+import { useMotionVariant } from "@/hooks/use-reduced-motion";
+import { Mono } from "@/components/ui/typography";
 
 function QueueRowContent({
   song,
@@ -51,9 +54,7 @@ function QueueRowContent({
         <p className="truncate text-sm font-medium text-foreground">{song.title}</p>
         <p className="truncate text-xs text-muted-foreground">{song.artistName}</p>
       </div>
-      <span className="hidden font-mono text-xs text-muted-foreground sm:block">
-        {formatDuration(song.duration)}
-      </span>
+      <Mono className="hidden sm:block">{formatDuration(song.duration)}</Mono>
       {reorderable && (
         <div className="flex items-center">
           <button
@@ -115,9 +116,19 @@ export function ReorderableQueueRow({
   onMoveDown?: () => void;
 }) {
   const dragControls = useDragControls();
+  const variants = useMotionVariant(queueSlide);
 
   return (
-    <Reorder.Item value={song} dragListener={false} dragControls={dragControls} className="list-none">
+    <Reorder.Item
+      value={song}
+      dragListener={false}
+      dragControls={dragControls}
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="list-none"
+    >
       <QueueRowContent
         song={song}
         reorderable

@@ -35,12 +35,7 @@ function BarsVisualizer({ bars, progress }: { bars: number[]; progress: number }
               "min-w-[2px] flex-1 rounded-full transition-colors duration-150",
               played ? "bg-primary" : "bg-white/15",
             )}
-            style={{
-              height: `${height * 100}%`,
-              boxShadow: played
-                ? "0 0 8px color-mix(in srgb, var(--primary) 60%, transparent)"
-                : undefined,
-            }}
+            style={{ height: `${height * 100}%` }}
           />
         );
       })}
@@ -89,13 +84,7 @@ function DotsVisualizer({ bars, progress }: { bars: number[]; progress: number }
               "mx-auto shrink-0 rounded-full transition-colors duration-150",
               played ? "bg-primary" : "bg-white/20",
             )}
-            style={{
-              width: size,
-              height: size,
-              boxShadow: played
-                ? "0 0 6px color-mix(in srgb, var(--primary) 65%, transparent)"
-                : undefined,
-            }}
+            style={{ width: size, height: size }}
           />
         );
       })}
@@ -104,13 +93,17 @@ function DotsVisualizer({ bars, progress }: { bars: number[]; progress: number }
 }
 
 function LineVisualizer({ bars, progress }: { bars: number[]; progress: number }) {
-  const points = bars
-    .map((height, index) => {
-      const x = (index / (bars.length - 1)) * 100;
-      const y = 40 - height * 36;
-      return `${x},${y}`;
-    })
-    .join(" ");
+  const points = useMemo(
+    () =>
+      bars
+        .map((height, index) => {
+          const x = (index / (bars.length - 1)) * 100;
+          const y = 40 - height * 36;
+          return `${x},${y}`;
+        })
+        .join(" "),
+    [bars],
+  );
   const dash = Math.max(0, Math.min(100, progress * 100));
 
   return (
@@ -132,7 +125,6 @@ function LineVisualizer({ bars, progress }: { bars: number[]; progress: number }
         strokeLinejoin="round"
         pathLength={100}
         strokeDasharray={`${dash} ${100 - dash}`}
-        style={{ filter: "drop-shadow(0 0 4px color-mix(in srgb, var(--primary) 60%, transparent))" }}
       />
     </svg>
   );

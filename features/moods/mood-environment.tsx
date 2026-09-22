@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { MoodEnvironment } from "@/data/moods";
 import { WaveformAccent } from "@/components/decorative/waveform-accent";
 import { FloatingParticles } from "@/components/decorative/floating-particles";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 function RippleRings({ color, fast = false }: { color: string; fast?: boolean }) {
   const reduced = useReducedMotion();

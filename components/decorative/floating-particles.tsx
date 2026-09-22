@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, type CSSProperties } from "react";
-import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface Particle {
   left: string;

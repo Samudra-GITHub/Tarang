@@ -3,6 +3,7 @@ import { getPlaylistSongs } from "@/lib/collections";
 import { CollectionHeader } from "@/components/collection/collection-header";
 import { TrackList } from "@/components/tracks/track-list";
 import { UserPlaylistDetail } from "@/features/library/user-playlist-detail";
+import { Page, PageContainer } from "@/components/layout/page";
 
 export default async function PlaylistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -15,11 +16,11 @@ export default async function PlaylistPage({ params }: { params: Promise<{ id: s
   const songs = getPlaylistSongs(playlist);
 
   return (
-    <div className="flex flex-col gap-8 pb-10">
+    <Page spacing="lg">
       <CollectionHeader kind="playlist" playlist={playlist} />
-      <div className="px-4 md:px-6">
+      <PageContainer>
         <TrackList songs={songs} sourceLabel={playlist.title} showAlbum enableFilter enableSort />
-      </div>
-    </div>
+      </PageContainer>
+    </Page>
   );
 }

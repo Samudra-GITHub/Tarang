@@ -7,6 +7,10 @@ import { StatTile } from "@/components/charts/stat-tile";
 import { BarList } from "@/components/charts/bar-list";
 import { MonthlyBarChart } from "@/components/charts/monthly-bar-chart";
 import { ListeningJourney } from "./listening-journey";
+import { Heading } from "@/components/ui/typography";
+import { Page, PageContainer, PageHeader } from "@/components/layout/page";
+import { Section, SectionTitle, SectionDescription } from "@/components/layout/section";
+import { Grid } from "@/components/layout/grid";
 import {
   computeListeningJourney,
   computeMonthlyHistory,
@@ -37,10 +41,12 @@ export function StatsView() {
 
   if (events.length === 0) {
     return (
-      <div className="flex flex-col gap-6 px-4 py-6 md:px-6">
-        <h1 className="font-heading text-2xl font-semibold tracking-tight">Stats</h1>
-        <p className="py-10 text-center text-sm text-muted-foreground">Loading your stats…</p>
-      </div>
+      <PageContainer>
+        <Page spacing="md">
+          <Heading>Stats</Heading>
+          <p className="py-10 text-center text-sm text-muted-foreground">Loading your stats…</p>
+        </Page>
+      </PageContainer>
     );
   }
 
@@ -52,72 +58,71 @@ export function StatsView() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 px-4 py-6 md:px-6">
-      <div>
-        <h1 className="font-heading text-2xl font-semibold tracking-tight">Stats</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Your listening, at a glance.</p>
-      </div>
+    <PageContainer>
+      <Page spacing="md">
+        <PageHeader title="Stats" description="Your listening, at a glance." />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatTile label="Hours listened" value={totalHours.toFixed(1)} icon={Clock} />
-        <StatTile label="Day streak" value={String(streak)} icon={Flame} />
-        <StatTile label="Total plays" value={events.length.toLocaleString()} icon={Headphones} />
-      </div>
+        <Grid preset="settings">
+          <StatTile label="Hours listened" value={totalHours.toFixed(1)} icon={Clock} />
+          <StatTile label="Day streak" value={String(streak)} icon={Flame} />
+          <StatTile label="Total plays" value={events.length.toLocaleString()} icon={Headphones} />
+        </Grid>
 
-      <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Top Artists</h2>
-          <BarList
-            items={topArtists.map(({ item, count }) => ({
-              key: item.id,
-              label: item.name,
-              value: count,
-              href: `/artist/${item.id}`,
-            }))}
-          />
-        </div>
+        <Grid preset="panels" className="gap-8">
+          <Section>
+            <SectionTitle>Top Artists</SectionTitle>
+            <BarList
+              items={topArtists.map(({ item, count }) => ({
+                key: item.id,
+                label: item.name,
+                value: count,
+                href: `/artist/${item.id}`,
+              }))}
+            />
+          </Section>
 
-        <div className="flex flex-col gap-3">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Top Albums</h2>
-          <BarList
-            items={topAlbums.map(({ item, count }) => ({
-              key: item.id,
-              label: item.title,
-              value: count,
-              href: `/album/${item.id}`,
-            }))}
-          />
-        </div>
+          <Section>
+            <SectionTitle>Top Albums</SectionTitle>
+            <BarList
+              items={topAlbums.map(({ item, count }) => ({
+                key: item.id,
+                label: item.title,
+                value: count,
+                href: `/album/${item.id}`,
+              }))}
+            />
+          </Section>
 
-        <div className="flex flex-col gap-3">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Top Genres</h2>
-          <BarList
-            items={topGenres.map(({ item, count }) => ({
-              key: item,
-              label: item,
-              value: count,
-            }))}
-          />
-        </div>
+          <Section>
+            <SectionTitle>Top Genres</SectionTitle>
+            <BarList
+              items={topGenres.map(({ item, count }) => ({
+                key: item,
+                label: item,
+                value: count,
+              }))}
+            />
+          </Section>
 
-        <div className="flex flex-col gap-3">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Time of Day</h2>
-          <BarList items={timeOfDayItems} />
-        </div>
-      </section>
+          <Section>
+            <SectionTitle>Time of Day</SectionTitle>
+            <BarList items={timeOfDayItems} />
+          </Section>
+        </Grid>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="font-heading text-lg font-semibold tracking-tight">Monthly History</h2>
-        <MonthlyBarChart data={monthly} />
-      </section>
+        <Section className="gap-4">
+          <SectionTitle>Monthly History</SectionTitle>
+          <MonthlyBarChart data={monthly} />
+        </Section>
 
-      <section className="flex flex-col gap-4">
-        <div>
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Listening Journey</h2>
-          <p className="text-sm text-muted-foreground">How your day sounds, hour by hour.</p>
-        </div>
-        <ListeningJourney entries={journey} />
-      </section>
-    </div>
+        <Section className="gap-4">
+          <div>
+            <SectionTitle>Listening Journey</SectionTitle>
+            <SectionDescription>How your day sounds, hour by hour.</SectionDescription>
+          </div>
+          <ListeningJourney entries={journey} />
+        </Section>
+      </Page>
+    </PageContainer>
   );
 }

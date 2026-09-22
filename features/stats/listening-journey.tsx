@@ -8,6 +8,8 @@ import type { JourneyBucketKey, JourneyEntry } from "@/lib/stats";
 import type { Song } from "@/types/music";
 import { songs } from "@/data/songs";
 import { usePlayerStore } from "@/lib/store/player-store";
+import { Mono, Title } from "@/components/ui/typography";
+import { durations, easings } from "@/lib/motion";
 
 const BUCKET_ICONS: Record<JourneyBucketKey, LucideIcon> = {
   morning: Sunrise,
@@ -28,7 +30,7 @@ function JourneyRow({ entry, isLast }: { entry: JourneyEntry; isLast: boolean })
       initial={{ opacity: 0, x: -12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      transition={{ duration: durations.normal, ease: easings.decelerate }}
       className="flex gap-4"
     >
       <div className="flex flex-col items-center">
@@ -46,11 +48,11 @@ function JourneyRow({ entry, isLast }: { entry: JourneyEntry; isLast: boolean })
 
       <div className="flex-1 pb-8">
         <div className="flex flex-wrap items-baseline gap-2">
-          <h3 className="font-heading text-base font-semibold text-foreground">{entry.label}</h3>
+          <Title as="h3">{entry.label}</Title>
           <span className="text-xs text-muted-foreground">{entry.hourRange}</span>
-          <span className="ml-auto font-mono text-xs text-muted-foreground">
+          <Mono className="ml-auto">
             {entry.count} {entry.count === 1 ? "play" : "plays"}
-          </span>
+          </Mono>
         </div>
 
         {entry.count === 0 ? (

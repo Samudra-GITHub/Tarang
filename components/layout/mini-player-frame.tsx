@@ -15,20 +15,23 @@ import {
   Shuffle,
   SkipBack,
   SkipForward,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { IconButton } from "@/components/ui/icon-button";
+import { Icon } from "@/components/ui/icon";
+import { PlaybackProgress } from "@/components/ui/playback-progress";
+import { VolumeProgress } from "@/components/ui/volume-progress";
 import { cn } from "@/lib/utils";
-import { formatDuration } from "@/lib/format-time";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { useLibraryStore } from "@/lib/store/library-store";
 import { usePlayerUIStore } from "@/lib/store/player-ui-store";
 import { isYoutubeAudioUrl } from "@/features/youtube/youtube-engine";
-import { useDominantColor } from "@/hooks/use-dominant-color";
+import { Body, Caption } from "@/components/ui/typography";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { announce } from "@/lib/store/announce-store";
+import { formatDuration } from "@/lib/format-time";
 
 export function MiniPlayerFrame() {
+  const reducedMotion = useReducedMotion();
   const queue = usePlayerStore((s) => s.queue);
   const currentIndex = usePlayerStore((s) => s.currentIndex);
   const isPlaying = usePlayerStore((s) => s.isPlaying);
@@ -61,27 +64,19 @@ export function MiniPlayerFrame() {
   const liked = currentSong ? likedSongIds.includes(currentSong.id) : false;
   const displayedTime = seekPreview ?? currentTime;
   const RepeatIcon = repeatMode === "one" ? Repeat1 : Repeat;
-  const tint = useDominantColor(currentSong?.coverUrl);
 
   return (
     <div
       role="region"
       aria-label="Now playing"
-      className="mx-2 mb-2 flex h-[72px] shrink-0 items-center gap-4 rounded-2xl border border-border-strong/60 bg-surface/90 px-3 backdrop-blur-xl transition-shadow duration-700 md:mx-3 md:mb-3 md:h-20 md:px-4"
-      style={
-        hasTrack
-          ? {
-              boxShadow: `0 -1px 0 0 color-mix(in srgb, ${tint} 35%, transparent) inset, 0 12px 40px -12px color-mix(in srgb, ${tint} 30%, transparent), 0 8px 24px -8px rgba(0,0,0,0.5)`,
-            }
-          : undefined
-      }
+      className="mx-2 mb-2 flex h-player shrink-0 items-center gap-4 rounded-2xl border border-border-strong/60 bg-surface-player px-3 shadow-lg shadow-black/40 md:mx-3 md:mb-3 md:h-player-md md:px-4"
     >
       {/* Track info */}
       <div className="flex min-w-0 flex-1 items-center gap-3 md:w-64 md:flex-none">
         {currentSong ? (
           <motion.button
             type="button"
-            layoutId="player-artwork"
+            layoutId={reducedMotion ? undefined : "player-artwork"}
             onClick={openNowPlaying}
             aria-label="Expand player"
             className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-2 text-muted-foreground"
@@ -96,19 +91,15 @@ export function MiniPlayerFrame() {
           </motion.button>
         ) : (
           <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-2 text-muted-foreground">
-            <Music2 className="size-5" aria-hidden />
+            <Icon icon={Music2} size="md" />
           </div>
         )}
         <div className="min-w-0">
           {currentSong ? (
             isYoutubeAudioUrl(currentSong.audioUrl) ? (
               <>
-                <p className="truncate text-sm font-medium text-foreground">
-                  {currentSong.title}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {currentSong.artistName}
-                </p>
+                <Body className="truncate font-medium">{currentSong.title}</Body>
+                <Caption className="block truncate">{currentSong.artistName}</Caption>
               </>
             ) : (
               <>
@@ -128,145 +119,92 @@ export function MiniPlayerFrame() {
             )
           ) : (
             <>
-              <p className="truncate text-sm font-medium text-foreground">Not playing</p>
-              <p className="truncate text-xs text-muted-foreground">
-                Pick a song to get started
-              </p>
+              <Body className="truncate font-medium">Not playing</Body>
+              <Caption className="block truncate">Pick a song to get started</Caption>
             </>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
+        <IconButton
           disabled={!hasTrack}
           onClick={() => currentSong && toggleLikedSong(currentSong.id)}
-          className="ml-1 hidden rounded-full text-muted-foreground hover:text-foreground disabled:opacity-40 md:inline-flex"
+          className="ml-1 hidden disabled:opacity-40 md:inline-flex"
           aria-label={liked ? "Remove from Liked Songs" : "Add to Liked Songs"}
           aria-pressed={liked}
         >
-          <Heart className={cn("size-4", liked && "fill-current text-accent-secondary")} aria-hidden />
-        </Button>
+          <Icon icon={Heart} className={cn(liked && "fill-current text-accent-secondary")} />
+        </IconButton>
       </div>
 
       {/* Transport controls */}
       <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 md:max-w-xl">
         <div className="flex items-center gap-2 md:gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
+          <IconButton
             disabled={!hasTrack}
             onClick={toggleShuffle}
-            className={cn(
-              "hidden rounded-full disabled:opacity-40 md:inline-flex",
-              shuffle ? "text-primary" : "text-muted-foreground hover:text-foreground",
-            )}
+            className={cn("hidden disabled:opacity-40 md:inline-flex", shuffle && "text-primary")}
             aria-label="Shuffle"
             aria-pressed={shuffle}
           >
-            <Shuffle className="size-4" aria-hidden />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
+            <Icon icon={Shuffle} />
+          </IconButton>
+          <IconButton
             disabled={!hasTrack}
             onClick={previous}
-            className="hidden rounded-full text-muted-foreground hover:text-foreground disabled:opacity-40 md:inline-flex"
+            className="hidden disabled:opacity-40 md:inline-flex"
             aria-label="Previous"
           >
-            <SkipBack className="size-4" aria-hidden />
-          </Button>
-          <Button
-            size="icon"
+            <Icon icon={SkipBack} />
+          </IconButton>
+          <IconButton
+            variant="primary"
             disabled={!hasTrack}
             onClick={togglePlay}
-            className="size-9 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
+            className="size-9 disabled:opacity-40"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? (
-              <Pause className="size-4 fill-current" aria-hidden />
-            ) : (
-              <Play className="size-4 fill-current" aria-hidden />
-            )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
+            <Icon icon={isPlaying ? Pause : Play} className="fill-current" />
+          </IconButton>
+          <IconButton
             disabled={!hasTrack}
             onClick={next}
-            className="hidden rounded-full text-muted-foreground hover:text-foreground disabled:opacity-40 md:inline-flex"
+            className="hidden disabled:opacity-40 md:inline-flex"
             aria-label="Next"
           >
-            <SkipForward className="size-4" aria-hidden />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
+            <Icon icon={SkipForward} />
+          </IconButton>
+          <IconButton
             disabled={!hasTrack}
             onClick={cycleRepeatMode}
             className={cn(
-              "hidden rounded-full disabled:opacity-40 md:inline-flex",
-              repeatMode !== "off" ? "text-primary" : "text-muted-foreground hover:text-foreground",
+              "hidden disabled:opacity-40 md:inline-flex",
+              repeatMode !== "off" && "text-primary",
             )}
             aria-label={`Repeat: ${repeatMode}`}
             aria-pressed={repeatMode !== "off"}
           >
-            <RepeatIcon className="size-4" aria-hidden />
-          </Button>
+            <Icon icon={RepeatIcon} />
+          </IconButton>
         </div>
-        <div className="hidden w-full items-center gap-2 md:flex">
-          <span className="font-mono text-[11px] text-muted-foreground">
-            {formatDuration(displayedTime)}
-          </span>
-          <Slider
-            value={[displayedTime]}
-            max={duration || 100}
-            step={1}
-            disabled={!hasTrack}
-            onValueChange={([value]) => setSeekPreview(value)}
-            onValueCommit={([value]) => {
-              seekTo(value);
-              setSeekPreview(null);
-            }}
-            className="min-w-0 flex-1"
-          />
-          <span className="font-mono text-[11px] text-muted-foreground">
-            {formatDuration(duration)}
-          </span>
-        </div>
+        <PlaybackProgress
+          currentTime={displayedTime}
+          duration={duration}
+          disabled={!hasTrack}
+          onSeekPreview={setSeekPreview}
+          onSeekCommit={(value) => {
+            seekTo(value);
+            setSeekPreview(null);
+            announce(`Seeked to ${formatDuration(value)}`);
+          }}
+          className="hidden w-full items-center gap-2 md:flex"
+        />
       </div>
 
       {/* Secondary controls */}
       <div className="hidden flex-1 items-center justify-end gap-2 md:flex md:w-64 md:flex-none">
-        <Button
-          variant="ghost"
-          size="icon"
-          disabled={!hasTrack}
-          onClick={openQueue}
-          className="rounded-full text-muted-foreground hover:text-foreground disabled:opacity-40"
-          aria-label="Queue"
-        >
-          <ListMusic className="size-4" aria-hidden />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleMute}
-          className="rounded-full text-muted-foreground hover:text-foreground"
-          aria-label={muted ? "Unmute" : "Mute"}
-        >
-          {muted || volume === 0 ? (
-            <VolumeX className="size-4" aria-hidden />
-          ) : (
-            <Volume2 className="size-4" aria-hidden />
-          )}
-        </Button>
-        <Slider
-          value={[muted ? 0 : volume * 100]}
-          max={100}
-          step={1}
-          onValueChange={([value]) => setVolume(value / 100)}
-          className="w-24"
-        />
+        <IconButton disabled={!hasTrack} onClick={openQueue} className="disabled:opacity-40" aria-label="Queue">
+          <Icon icon={ListMusic} />
+        </IconButton>
+        <VolumeProgress volume={volume} muted={muted} onVolumeChange={setVolume} onToggleMute={toggleMute} />
       </div>
     </div>
   );
