@@ -1,0 +1,11 @@
+<svg width="1200" height="750" viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#090909"/>
+  <rect x="0" y="0" width="220" height="750" fill="#141414"/>
+  <text x="40" y="60" font-family="sans-serif" font-size="28" fill="#2dd4bf" font-weight="700">तरङ्ग</text>
+  <text x="40" y="82" font-family="sans-serif" font-size="12" fill="#9a9a96" letter-spacing="3">TARANG</text>
+  <rect x="300" y="60" width="620" height="44" rx="22" fill="#1c1c1c"/>
+  <text x="330" y="87" font-family="sans-serif" font-size="14" fill="#9a9a96">Search songs, artists, albums…</text>
+  <rect x="300" y="140" width="600" height="320" rx="16" fill="#1c1c1c"/>
+  <text x="600" y="310" font-family="sans-serif" font-size="20" fill="#4a4a46" text-anchor="middle">Home screenshot placeholder</text>
+  <text x="600" y="500" font-family="sans-serif" font-size="15" fill="#5a5a56" text-anchor="middle">Replace with a real capture — see public/github/README.md</text>
+</svg>
