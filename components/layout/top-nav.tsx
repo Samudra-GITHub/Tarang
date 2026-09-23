@@ -15,6 +15,8 @@ import {
 import { Logo } from "@/components/layout/logo";
 import { MobileSidebarSheet } from "@/components/layout/mobile-sidebar-sheet";
 import { initialFromName, useProfileStore } from "@/lib/store/profile-store";
+import { GLASS_PILL } from "@/lib/glass";
+import { cn } from "@/lib/utils";
 
 export function TopNav() {
   const router = useRouter();
@@ -22,7 +24,7 @@ export function TopNav() {
   const signOut = useProfileStore((s) => s.signOut);
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-4 md:px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between gap-3 px-4 md:px-6">
       <div className="flex items-center gap-2">
         <div className="hidden items-center gap-1 md:flex">
           <Button
@@ -53,7 +55,10 @@ export function TopNav() {
         <Button
           asChild
           variant="secondary"
-          className="h-10 w-full min-w-0 max-w-sm justify-start gap-2 rounded-full bg-surface-2 text-muted-foreground hover:text-foreground"
+          className={cn(
+            "h-10 w-full min-w-0 max-w-sm justify-start gap-2 bg-transparent text-muted-foreground shadow-none hover:bg-white/[0.14] hover:text-foreground",
+            GLASS_PILL,
+          )}
         >
           <Link href="/search">
             <Search className="size-4 shrink-0" aria-hidden />

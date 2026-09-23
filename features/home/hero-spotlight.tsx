@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { durations, easings } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Display } from "@/components/ui/typography";
+import { GLASS_PANEL_STRONG } from "@/lib/glass";
 
 export type Spotlight = { kind: "album"; item: Album } | { kind: "playlist"; item: Playlist };
 
@@ -53,7 +54,10 @@ export function HeroSpotlight({ spotlight, greeting }: { spotlight: Spotlight; g
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative flex flex-col items-center gap-6 px-4 pt-8 md:flex-row md:items-end md:gap-10 md:px-6 md:pt-16"
+        className={cn(
+          "relative mx-4 flex flex-col items-center gap-6 p-6 md:mx-6 md:flex-row md:items-end md:gap-10 md:p-10",
+          GLASS_PANEL_STRONG,
+        )}
       >
         <motion.div
           initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.94 }}
@@ -93,7 +97,10 @@ export function HeroSpotlight({ spotlight, greeting }: { spotlight: Spotlight; g
             <Button
               variant="ghost"
               size="icon"
-              className="size-12 rounded-full border border-border-strong text-muted-foreground hover:text-foreground"
+              className={cn(
+                "size-12 border-white/10 bg-white/10 text-muted-foreground hover:bg-white/[0.16] hover:text-foreground",
+                "backdrop-blur-xl rounded-full",
+              )}
               onClick={() =>
                 isAlbum ? toggleSavedAlbum(entity.id) : toggleSavedPlaylist(entity.id)
               }

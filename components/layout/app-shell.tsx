@@ -15,6 +15,7 @@ import { SongPopupDialog } from "@/features/home/song-popup-dialog";
 import { ToastViewport } from "@/components/ui/toast";
 import { ScrollContainer } from "@/components/layout/scroll-container";
 import { LiveRegion } from "@/components/layout/live-region";
+import { WallpaperBackground } from "@/components/decorative/wallpaper-background";
 
 const SmartDownloadsSync = dynamic(() =>
   import("@/features/downloads/smart-downloads-sync").then((m) => m.SmartDownloadsSync),
@@ -25,7 +26,8 @@ const CreditsSheet = dynamic(() =>
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col">
+      <WallpaperBackground />
       <div className="flex min-h-0 flex-1">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">

@@ -5,12 +5,13 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { mobileNavItems } from "@/lib/nav-items";
 import { SafeArea } from "@/components/layout/safe-area";
+import { GLASS_PANEL } from "@/lib/glass";
 
 export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <SafeArea edge="bottom" className="shrink-0 border-t border-border bg-background md:hidden">
+    <SafeArea edge="bottom" className={cn("mx-2 mb-2 shrink-0 md:hidden", GLASS_PANEL)}>
       <nav aria-label="Primary" className="flex h-14 items-center justify-around">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;

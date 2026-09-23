@@ -29,6 +29,7 @@ import { Body, Caption } from "@/components/ui/typography";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { announce } from "@/lib/store/announce-store";
 import { formatDuration } from "@/lib/format-time";
+import { GLASS_PANEL_STRONG } from "@/lib/glass";
 
 export function MiniPlayerFrame() {
   const reducedMotion = useReducedMotion();
@@ -69,7 +70,10 @@ export function MiniPlayerFrame() {
     <div
       role="region"
       aria-label="Now playing"
-      className="mx-2 mb-2 flex h-player shrink-0 items-center gap-4 rounded-2xl border border-border-strong/60 bg-surface-player px-3 shadow-lg shadow-black/40 md:mx-3 md:mb-3 md:h-player-md md:px-4"
+      className={cn(
+        "mx-2 mb-2 flex h-player shrink-0 items-center gap-4 px-3 shadow-sm shadow-black/20 md:mx-3 md:mb-3 md:h-player-md md:px-4",
+        GLASS_PANEL_STRONG,
+      )}
     >
       {/* Track info */}
       <div className="flex min-w-0 flex-1 items-center gap-3 md:w-64 md:flex-none">
@@ -137,6 +141,18 @@ export function MiniPlayerFrame() {
 
       {/* Transport controls */}
       <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 md:max-w-xl">
+        <PlaybackProgress
+          currentTime={displayedTime}
+          duration={duration}
+          disabled={!hasTrack}
+          onSeekPreview={setSeekPreview}
+          onSeekCommit={(value) => {
+            seekTo(value);
+            setSeekPreview(null);
+            announce(`Seeked to ${formatDuration(value)}`);
+          }}
+          className="hidden w-full items-center gap-2 md:flex"
+        />
         <div className="flex items-center gap-2 md:gap-4">
           <IconButton
             disabled={!hasTrack}
@@ -185,18 +201,6 @@ export function MiniPlayerFrame() {
             <Icon icon={RepeatIcon} />
           </IconButton>
         </div>
-        <PlaybackProgress
-          currentTime={displayedTime}
-          duration={duration}
-          disabled={!hasTrack}
-          onSeekPreview={setSeekPreview}
-          onSeekCommit={(value) => {
-            seekTo(value);
-            setSeekPreview(null);
-            announce(`Seeked to ${formatDuration(value)}`);
-          }}
-          className="hidden w-full items-center gap-2 md:flex"
-        />
       </div>
 
       {/* Secondary controls */}
