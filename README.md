@@ -6,7 +6,7 @@ Tarang is a premium music streaming web app built around motion, glass surfaces,
 
 <br/>
 
-<img src="./assets/hero.png" width="100%" alt="Tarang hero" />
+<img src="./assets/hero-placeholder.svg" width="100%" alt="Tarang hero" />
 
 <br/>
 
@@ -52,12 +52,12 @@ The app currently runs entirely on static seed data — no backend, no account s
 
 <table width="100%">
 <tr>
-<td width="50%"><img src="./assets/screenshots/home.png" width="100%" alt="Home" /><br/><sub align="center">Home</sub></td>
-<td width="50%"><img src="./assets/screenshots/dashboard.png" width="100%" alt="Library dashboard" /><br/><sub align="center">Library</sub></td>
+<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Home" /><br/><sub align="center">Home</sub></td>
+<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Library dashboard" /><br/><sub align="center">Library</sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="./assets/screenshots/mobile.png" width="100%" alt="Mobile layout" /><br/><sub align="center">Mobile</sub></td>
-<td width="50%"><img src="./assets/screenshots/feature-1.png" width="100%" alt="Floating player" /><br/><sub align="center">Floating player</sub></td>
+<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Mobile layout" /><br/><sub align="center">Mobile</sub></td>
+<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Floating player" /><br/><sub align="center">Floating player</sub></td>
 </tr>
 </table>
 
