@@ -36,7 +36,7 @@ function Card({ width = "md", tiltDegrees = 8, className, children }: CardProps)
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.02 }}
+      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.03 }}
       whileTap={reducedMotion ? undefined : { scale: 0.97 }}
       transition={easings.springSnappy}
       style={reducedMotion ? undefined : { rotateX, rotateY, transformPerspective: 800 }}
@@ -61,6 +61,8 @@ export interface CardArtworkProps {
   badge?: React.ReactNode;
   /** 0–1 download/watch progress, rendered as a thin bar along the bottom edge. */
   progress?: number;
+  /** Tints the hover glow with this artwork's own dominant color — pass `useDominantColor(src)`. Falls back to the brand accent. */
+  glowColor?: string;
   children?: React.ReactNode;
 }
 
@@ -86,6 +88,7 @@ function CardArtwork({
   loading = false,
   badge,
   progress,
+  glowColor,
   children,
 }: CardArtworkProps) {
   const content = (
@@ -110,14 +113,15 @@ function CardArtwork({
   );
 
   const wrapperClassName = cn(
-    "relative block w-full overflow-hidden border bg-surface-2 shadow-md shadow-black/20 transition-shadow duration-300 group-hover:shadow-lg group-hover:shadow-black/35",
+    "relative block w-full overflow-hidden border bg-surface-2 shadow-md shadow-black/20 transition-shadow duration-300 group-hover:shadow-[0_10px_30px_-8px_rgba(0,0,0,0.5),0_0_28px_-4px_var(--card-glow)]",
     FOCUS_RING,
     SHAPE_CLASSES[shape],
     selected ? "border-primary" : "border-border",
   );
+  const glowStyle = { "--card-glow": glowColor ?? "var(--primary)" } as React.CSSProperties;
 
   return (
-    <div className="relative">
+    <div className="relative" style={glowStyle}>
       {href ? (
         <Link href={href} className={wrapperClassName} aria-label={ariaLabel}>
           {content}

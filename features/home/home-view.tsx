@@ -1,8 +1,12 @@
 import { HeroSpotlight, type Spotlight } from "./hero-spotlight";
 import { EditorialBento } from "./editorial-bento";
+import { NewReleasesBento } from "./new-releases-bento";
+import { PlaylistCinematicCard } from "./playlist-cinematic-card";
+import { ContextRail } from "./context-rail";
 import { AlbumCard } from "@/components/cards/album-card";
 import { PlaylistCard } from "@/components/cards/playlist-card";
 import { GenreCard } from "@/components/cards/genre-card";
+import { ArtistCard } from "@/components/cards/artist-card";
 import { PinnedSection } from "@/features/pinned/pinned-section";
 import { TrendingRail } from "@/features/home/trending-rail";
 import { MoodCard } from "@/features/moods/mood-card";
@@ -13,6 +17,7 @@ import { albums } from "@/data/albums";
 import { playlists } from "@/data/playlists";
 import { genres } from "@/data/genres";
 import { moods } from "@/data/moods";
+import { artists } from "@/data/artists";
 import { continueListening, recentlyPlayed, type HomeMediaRef } from "@/data/home-sections";
 
 function MediaRefCard({ item }: { item: HomeMediaRef }) {
@@ -44,47 +49,72 @@ export function HomeView() {
   const spotlight = homeSpotlight;
 
   return (
-    <Page spacing="xl">
-      {spotlight && <HeroSpotlight spotlight={spotlight} greeting="Good to see you" />}
+    <div className="flex gap-6 px-0 xl:pr-6">
+      <div className="min-w-0 flex-1">
+        <Page spacing="xl">
+          {spotlight && <HeroSpotlight spotlight={spotlight} greeting="Good to see you" />}
 
-      <PinnedSection />
+          <PinnedSection />
 
-      <TrendingRail />
+          <TrendingRail />
 
-      <HorizontalRail title="Mood Spaces">
-        {moods.map((mood) => (
-          <MoodCard key={mood.id} mood={mood} />
-        ))}
-      </HorizontalRail>
+          <HorizontalRail title="Mood Spaces">
+            {moods.map((mood) => (
+              <MoodCard key={mood.id} mood={mood} />
+            ))}
+          </HorizontalRail>
 
-      <HorizontalRail title="Continue Listening">
-        {continueListening.map((item) => (
-          <MediaRefCard key={`${item.kind}-${item.id}`} item={item} />
-        ))}
-      </HorizontalRail>
+          <HorizontalRail title="Continue Listening">
+            {continueListening.map((item) => (
+              <MediaRefCard key={`${item.kind}-${item.id}`} item={item} />
+            ))}
+          </HorizontalRail>
 
-      <HorizontalRail title="Recently Played">
-        {recentlyPlayed.map((item) => (
-          <MediaRefCard key={`${item.kind}-${item.id}`} item={item} />
-        ))}
-      </HorizontalRail>
+          <HorizontalRail title="Recently Played">
+            {recentlyPlayed.map((item) => (
+              <MediaRefCard key={`${item.kind}-${item.id}`} item={item} />
+            ))}
+          </HorizontalRail>
 
-      <HorizontalRail title="New For You">
-        {albums.map((album) => (
-          <AlbumCard key={album.id} album={album} />
-        ))}
-      </HorizontalRail>
+          <HorizontalRail title="Top Artists">
+            {artists.map((artist) => (
+              <ArtistCard key={artist.id} artist={artist} />
+            ))}
+          </HorizontalRail>
 
-      <Section>
-        <SectionTitle className="px-4 md:px-6">Editorial Picks</SectionTitle>
-        <EditorialBento playlists={playlists} />
-      </Section>
+          <Section>
+            <SectionTitle className="px-4 md:px-6">New Releases</SectionTitle>
+            <NewReleasesBento albums={albums} />
+          </Section>
 
-      <HorizontalRail title="Genre Collections">
-        {genres.map((genre) => (
-          <GenreCard key={genre.id} genre={genre} />
-        ))}
-      </HorizontalRail>
-    </Page>
+          <HorizontalRail title="Playlists">
+            {playlists.map((playlist) => (
+              <PlaylistCinematicCard key={playlist.id} playlist={playlist} />
+            ))}
+          </HorizontalRail>
+
+          <HorizontalRail title="New For You">
+            {albums.map((album) => (
+              <AlbumCard key={album.id} album={album} />
+            ))}
+          </HorizontalRail>
+
+          <Section>
+            <SectionTitle className="px-4 md:px-6">Editorial Picks</SectionTitle>
+            <EditorialBento playlists={playlists} />
+          </Section>
+
+          <HorizontalRail title="Genre Collections">
+            {genres.map((genre) => (
+              <GenreCard key={genre.id} genre={genre} />
+            ))}
+          </HorizontalRail>
+        </Page>
+      </div>
+
+      <div className="pt-6">
+        <ContextRail />
+      </div>
+    </div>
   );
 }

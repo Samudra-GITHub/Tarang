@@ -71,7 +71,7 @@ export function MiniPlayerFrame() {
       role="region"
       aria-label="Now playing"
       className={cn(
-        "mx-2 mb-2 flex h-player shrink-0 items-center gap-4 px-3 shadow-sm shadow-black/20 md:mx-3 md:mb-3 md:h-player-md md:px-4",
+        "mx-3 mb-3 flex h-player shrink-0 items-center gap-4 px-4 shadow-lg shadow-black/40 md:mx-6 md:mb-4 md:h-player-md md:rounded-full md:px-5",
         GLASS_PANEL_STRONG,
       )}
     >

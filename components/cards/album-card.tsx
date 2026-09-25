@@ -3,11 +3,13 @@
 import type { Album } from "@/types/music";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { getAlbumSongs } from "@/lib/collections";
+import { useDominantColor } from "@/hooks/use-dominant-color";
 import { PlayButton } from "@/components/ui/play-button";
 import { Card, CardArtwork, CardBody, CardTitle, CardSubtitle } from "@/components/ui/card";
 
 export function AlbumCard({ album, progress }: { album: Album; progress?: number }) {
   const playQueue = usePlayerStore((state) => state.playQueue);
+  const glow = useDominantColor(album.coverUrl);
 
   return (
     <Card>
@@ -16,6 +18,7 @@ export function AlbumCard({ album, progress }: { album: Album; progress?: number
         href={`/album/${album.id}`}
         ariaLabel={`${album.title} by ${album.artistName}`}
         progress={progress}
+        glowColor={glow}
       >
         <PlayButton
           label={`Play ${album.title}`}

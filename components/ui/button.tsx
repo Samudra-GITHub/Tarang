@@ -7,7 +7,7 @@ import { FOCUS_RING } from "@/lib/a11y";
 
 const buttonVariants = cva(
   cn(
-    "group/button relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-transparent text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out select-none focus-visible:border-border-focus active:not-aria-[haspopup]:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "group/button relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-transparent text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out select-none focus-visible:border-border-focus active:not-aria-[haspopup]:scale-[0.97] active:not-aria-[haspopup]:shadow-[0_0_0_8px_rgba(45,212,191,0.12)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     FOCUS_RING,
   ),
   {

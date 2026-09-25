@@ -5,6 +5,7 @@ import type { Song } from "@/types/music";
 import { usePlayerStore } from "@/lib/store/player-store";
 import { useSongPopupStore } from "@/lib/store/song-popup-store";
 import { useTilt } from "@/hooks/use-tilt";
+import { useDominantColor } from "@/hooks/use-dominant-color";
 import { easings } from "@/lib/motion";
 import { cardEnter } from "@/lib/motion-variants";
 import { useMotionVariant, useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -17,6 +18,7 @@ export function TrendingSongCard({ song }: { song: Song }) {
   const { ref, rotateX, rotateY, onMouseMove, onMouseLeave } = useTilt();
   const reducedMotion = useReducedMotion();
   const variants = useMotionVariant(cardEnter);
+  const glow = useDominantColor(song.coverUrl);
 
   return (
     <motion.div
@@ -29,7 +31,7 @@ export function TrendingSongCard({ song }: { song: Song }) {
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.02 }}
+      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.03 }}
       whileTap={reducedMotion ? undefined : { scale: 0.97 }}
       transition={easings.springSnappy}
       style={reducedMotion ? undefined : { rotateX, rotateY, transformPerspective: 800 }}
@@ -40,6 +42,7 @@ export function TrendingSongCard({ song }: { song: Song }) {
         src={song.coverUrl}
         onClick={() => openPopup(song)}
         ariaLabel={`${song.title} by ${song.artistName} — open details`}
+        glowColor={glow}
       >
         <PlayButton label={`Play ${song.title}`} onPlay={() => playQueue([song], 0, song.title)} />
       </CardArtwork>
