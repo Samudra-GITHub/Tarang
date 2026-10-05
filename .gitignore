@@ -42,3 +42,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Added by repository cleanup
+.claude/
+CLAUDE.md
+AGENTS.md
+
+# Added by repository cleanup
+.vscode/
+.idea/
