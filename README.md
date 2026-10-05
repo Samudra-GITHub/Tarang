@@ -1,168 +1,102 @@
 # Tarang
 
-**Music, redesigned for the web.**
+> A music-first streaming web app with a glass interface and a systemised motion language.
 
-Tarang is a premium music streaming web app built around motion, glass surfaces, and a listening experience that feels closer to a physical object than a browser tab.
-
-<br/>
-
-<img src="./assets/hero-placeholder.svg" width="100%" alt="Tarang hero" />
-
-<br/>
-
-## Live Demo
-
-Not yet deployed — run it locally for now (see [Setup](#setup)).
-
-<br/>
+Tarang (तरङ्ग, "wave") is a Next.js music player that treats motion design and a real design system as product decisions. It plays demo audio and YouTube search results through a persistent floating player.
 
 ## Overview
 
-Tarang isn't a Spotify clone. It's an exploration of what a music player feels like when glassmorphism, motion design, and a real design system are treated as first-class product decisions instead of decoration.
+Tarang is not a Spotify clone. It explores what a streaming app feels like when glass surfaces, shared motion variants and a documented design system are first-class. The interface is the instrument: restrained panels, soft depth and a monochrome-first palette so album art and typography carry the weight.
 
-The app currently runs entirely on static seed data — no backend, no account system, no environment variables. Every screen you can reach today is real, shipped UI, not a mockup.
-
-<br/>
-
-## What's Available Now
-
-- Free music playback
-- Premium glassmorphism interface
-- Redesigned homepage
-- Floating, persistent music player
-- Responsive layout across breakpoints
-- Smooth, systemized page and state transitions
-- Library, search, stats, moods, and downloads surfaces
-- A dedicated in-app design system reference (`/design-system`)
-
-<br/>
-
-## Coming Soon
-
-- Playlists
-- Lyrics
-- Queue management
-- AI-powered recommendations
-- Favorites
-- Offline downloads
-
-<br/>
-
-## Screenshots
-
-<table width="100%">
-<tr>
-<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Home" /><br/><sub align="center">Home</sub></td>
-<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Library dashboard" /><br/><sub align="center">Library</sub></td>
-</tr>
-<tr>
-<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Mobile layout" /><br/><sub align="center">Mobile</sub></td>
-<td width="50%"><img src="./assets/screenshot-placeholder.svg" width="100%" alt="Floating player" /><br/><sub align="center">Floating player</sub></td>
-</tr>
-</table>
-
-<br/>
+There is no backend, account system or required environment variable. The catalog is seed data in `data/`, user state is kept in the browser, and search and trending use public YouTube-backed services.
 
 ## Features
 
-| Feature | Description |
-|:--|:--|
-| Floating player | A persistent, glass-surfaced player that survives navigation and never blocks content |
-| Design system | A living `/design-system` route documenting tokens, motion, and components in-app |
-| Moods | Curated listening states rather than flat genre tags |
-| Stats | A dedicated surface for listening activity |
-| Dev tools | An internal `/dev-tools` route for inspecting design-system state during development |
-
-<br/>
-
-## UI Philosophy
-
-Tarang treats the interface as the instrument, not the wrapper around one. Every surface uses restrained glass panels, soft depth, and a monochrome-first palette so that album art and typography — not chrome — carry the visual weight.
-
-<br/>
-
-## Motion System
-
-Motion in Tarang is systemized, not sprinkled in. Shared variants live in `lib/motion.ts` and `lib/motion-variants.ts`, and are reused across every route so that a transition feels the same whether you're opening an album, a playlist, or a settings panel. Framer Motion drives all of it.
-
-<br/>
-
-## Folder Structure
-
-```
-tarang/
-├── app/                  # Next.js App Router routes
-│   ├── album/
-│   ├── artist/
-│   ├── design-system/    # Live design-system reference
-│   ├── dev-tools/
-│   ├── downloads/
-│   ├── library/
-│   ├── moods/
-│   ├── playlist/
-│   ├── search/
-│   ├── settings/
-│   └── stats/
-├── components/
-│   ├── cards/
-│   ├── charts/
-│   ├── collection/
-│   ├── decorative/
-│   ├── layout/
-│   ├── tracks/
-│   └── ui/
-├── features/             # Feature-scoped logic, mirrors app/ routes
-├── lib/                  # Motion variants, glass tokens, formatting, stats
-├── data/                 # Static seed data (no backend yet)
-├── docs/                 # Design-system, accessibility, and release reports
-└── styles/
-```
-
-<br/>
+- **Persistent mini player** and a full now-playing view with queue drawer, synced lyrics view, translations, credits sheet and a waveform progress bar
+- **Playback** through a native `<audio>` element for seed tracks and the YouTube IFrame Player API for YouTube results
+- **Library** with user playlists, folders, drag-and-drop playlist cards, a recently-added timeline and add-to-playlist dialogs
+- **Search** across the catalog and YouTube (via public Invidious instances, with caching and fallback), plus a trending rail
+- **Moods**: curated listening states with their own environments
+- **Stats**: a listening journey and charts, plus **pins** and listening history
+- **Downloads** (simulated): quality tiers, a storage estimate, smart downloads and offline mode, backed by `localStorage`
+- **Design system reference** at `/design-system` and an internal `/dev-tools` page
+- **Accessibility**: reduced-motion support, live-region announcements, global keyboard shortcuts, and an accessibility report in `docs/`
+- **PWA basics**: web manifest, generated icons and Open Graph image, sitemap and robots
 
 ## Tech Stack
 
-`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS 4` · `Framer Motion` · `Zustand` · `Radix UI` · `shadcn/ui`
+| Area | Technology |
+| --- | --- |
+| Framework | Next.js 15 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS v4, design tokens in `styles/tokens.css`, shadcn/ui, Radix UI |
+| Motion | Framer Motion with shared variants (`lib/motion.ts`, `lib/motion-variants.ts`) |
+| State | Zustand (with `persist`) |
+| Playback / search | HTML audio, YouTube IFrame Player API, Invidious API |
 
-<br/>
+## Project Structure
 
-## Setup
+```
+Tarang/
+├── app/                 # Routes: album, artist, playlist, library, search, moods,
+│                        #   downloads, stats, settings, design-system, dev-tools
+├── components/          # cards, charts, collection, decorative, layout, tracks, ui
+├── features/            # Feature modules: home, player, library, search, moods,
+│                        #   stats, downloads, settings, youtube, ...
+├── hooks/               # Reduced motion, shortcuts, online status, dominant colour, tilt
+├── lib/                 # Motion, glass tokens, formatting, search, stats
+│   └── store/           # Zustand stores (player, library, downloads, settings, ...)
+├── data/                # Seed songs, albums, artists, playlists, moods, lyrics
+├── styles/tokens.css    # Design tokens
+├── docs/                # Design system, accessibility, performance and release reports
+└── public/github/       # README placeholder screenshots
+```
+
+## Getting Started
+
+Requires Node.js and npm.
 
 ```bash
 git clone https://github.com/Samudra-GITHub/Tarang.git
 cd Tarang
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
 ```
 
-The app runs at `http://localhost:3000`.
+Other scripts: `npm run build`, `npm run start`, `npm run lint`.
 
-<br/>
+## Configuration
 
-## Environment Variables
+Nothing is required to run locally. Optionally set `NEXT_PUBLIC_SITE_URL` to the deployed origin so metadata, sitemap and robots use the right URL (it defaults to `http://localhost:3000`).
 
-None required. Tarang currently runs entirely on static seed data in `data/` — no API keys, database, or auth provider needed to run it locally.
+## Architecture
 
-<br/>
+- **Player store as the hub.** `lib/store/player-store.ts` owns playback state. It bridges events from both the native audio element and the YouTube IFrame wrapper (`features/youtube/youtube-engine.ts`) so the UI is engine-agnostic.
+- **Feature-scoped modules.** Route files in `app/` stay thin and render views from `features/`.
+- **Design system first.** Tokens, typography, layout primitives and motion variants are shared across every route, and documented in [docs/design-system.md](docs/design-system.md).
+- **Persisted client state.** Library, downloads and settings persist to `localStorage`.
 
-## Roadmap
+Known constraints:
 
-- [x] Glassmorphism UI and redesigned homepage
-- [x] Floating player and responsive layout
-- [x] Library, search, stats, and moods surfaces
-- [ ] Playlists
-- [ ] Lyrics
-- [ ] Queue management
-- [ ] AI-powered recommendations
-- [ ] Favorites
-- [ ] Offline downloads
+- Search relies on community-run public Invidious instances, which can go offline. The list is in `features/youtube/invidious-client.ts`.
+- Artwork comes from `picsum.photos` and demo audio is placeholder content.
 
-<br/>
+Further reading: [design system](docs/design-system.md), [accessibility report](docs/accessibility-report.md), [performance report](docs/performance-report.md), [v3 release report](docs/v3-release-report.md).
+
+## Deployment
+
+No deployment configuration is included. It is a standard Next.js app (`npm run build`, then `npm run start`).
+
+## Screenshots
+
+`public/github/` and `assets/` hold generated placeholder graphics, not real screenshots, so none are shown.
+
+## Future Improvements
+
+- Real offline downloads (currently simulated)
+- A catalog and playback backend
+- AI-powered recommendations
+- Replace placeholder artwork and screenshots
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
-
-<br/>
-
-<sub>Part of the Sams Studio product ecosystem. See the [profile](https://github.com/Samudra-GITHub) for the full lineup.</sub>
+MIT, see [LICENSE](LICENSE).
