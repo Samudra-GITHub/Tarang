@@ -24,6 +24,22 @@ Tarang is not a Spotify clone. It explores what a streaming app feels like when 
 
 There is no backend, account system or required environment variable. The catalog is seed data in `data/`, user state is kept in the browser, and search and trending use public YouTube-backed services.
 
+## Preview
+
+<p align="center">
+  <img src="docs/screenshots/desktop-home.webp" width="880" alt="Tarang home screen with a song playing: hero, now-playing and up-next panels, and the floating player" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/playback.gif" width="640" alt="Pressing Play, then expanding the mini player into the full now-playing view" />
+  <br />
+  <sub>Play a song, then expand the floating player. Recorded from the running app with its demo audio.</sub>
+</p>
+
+| Now playing | Stats | Mobile |
+| :-- | :-- | :-- |
+| <img src="docs/screenshots/desktop-now-playing.webp" width="320" alt="Full now-playing view with waveform progress" /> | <img src="docs/screenshots/desktop-stats.webp" width="320" alt="Listening stats" /> | <img src="docs/screenshots/mobile-home.webp" width="140" alt="Mobile home" /> |
+
 ## Features
 
 - **Persistent mini player** and a full now-playing view with queue drawer, synced lyrics view, translations, credits sheet and a waveform progress bar
