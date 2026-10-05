@@ -1,8 +1,22 @@
-# Tarang
+<div align="center">
 
-> A music-first streaming web app with a glass interface and a systemised motion language.
+# Tarang (तरङ्ग)
 
-Tarang (तरङ्ग, "wave") is a Next.js music player that treats motion design and a real design system as product decisions. It plays demo audio and YouTube search results through a persistent floating player.
+**A music-first streaming web app with a glass interface and one shared motion language.**
+
+Floating player · synced lyrics · queue · playlists · moods · stats · simulated offline downloads
+
+<br />
+
+**[Overview](#overview)** &nbsp;·&nbsp; **[Features](#features)** &nbsp;·&nbsp; **[Getting started](#getting-started)** &nbsp;·&nbsp; **[Architecture](#architecture)** &nbsp;·&nbsp; **[Structure](#project-structure)**
+
+<br />
+
+![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white) ![Zustand](https://img.shields.io/badge/Zustand-state-433e38?style=flat-square&logo=react&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
+</div>
+
+---
 
 ## Overview
 
@@ -48,7 +62,6 @@ Tarang/
 ├── data/                # Seed songs, albums, artists, playlists, moods, lyrics
 ├── styles/tokens.css    # Design tokens
 ├── docs/                # Design system, accessibility, performance and release reports
-└── public/github/       # README placeholder screenshots
 ```
 
 ## Getting Started
@@ -86,16 +99,12 @@ Further reading: [design system](docs/design-system.md), [accessibility report](
 
 No deployment configuration is included. It is a standard Next.js app (`npm run build`, then `npm run start`).
 
-## Screenshots
-
-`public/github/` and `assets/` hold generated placeholder graphics, not real screenshots, so none are shown.
-
 ## Future Improvements
 
 - Real offline downloads (currently simulated)
 - A catalog and playback backend
 - AI-powered recommendations
-- Replace placeholder artwork and screenshots
+- Replace the demo artwork and add real screenshots to this README
 
 ## License
 
